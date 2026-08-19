@@ -1,7 +1,7 @@
 ---
-title: "API Key Management and Authentication"
+title: "OneRep API Authentication: Keys, Scopes, and Limits"
 sidebarTitle: "Authentication"
-description: "Create and manage OneRep API keys, set the right scope for your use case, and authenticate every request with a Bearer token."
+description: "Create and manage OneRep API keys, choose the right scope for your integration, and authenticate every REST or MCP request with a Bearer token."
 ---
 
 Every request to the OneRep REST API and MCP endpoint must include an API key. You create keys inside the app, choose a scope when you create them, and pass them as a standard `Authorization` header. This page walks you through finding your base URL, minting a key, and using it correctly.
@@ -97,9 +97,9 @@ Limits run in a fixed window. When you exceed a limit, the API responds with `42
 
 ## Connecting AI assistants
 
-AI clients that speak the Model Context Protocol — including Claude Desktop — can connect using the same keys described above, or via OAuth. With OAuth, the client handles the authorization flow automatically: you open a browser, approve access, and the connection appears under **Settings → API & MCP → Connected apps**, where you can revoke it with one tap. No key copying required.
+AI clients that speak the Model Context Protocol — including Claude Desktop — can connect using the same keys described above, or via OAuth. With OAuth, the client handles the authorization flow for you: you open a browser, approve access on a screen showing the app's name, and the connection appears under **Settings → API & MCP → Connected apps**, where you can revoke it with one tap. No key copying required.
 
-If a client asks for a Client ID and Client Secret, go to **Settings → API & MCP → New OAuth client**, enter the redirect URI the client shows you, and paste the credentials back. The secret is shown once, exactly like an API key.
+If a client asks for a Client ID and Client Secret instead of handling the flow itself, go to **Settings → API & MCP → New OAuth client**, enter the redirect URI the client shows you, and paste the credentials back. The secret is shown once, exactly like an API key.
 
 ## Privacy
 
