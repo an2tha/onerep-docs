@@ -1,0 +1,104 @@
+---
+title: "Export Your OneRep Data and Manage Your Account"
+sidebarTitle: "Data Export"
+description: "Download a complete copy of your OneRep data, share your diary with a coach or partner, access your data via API, and understand account deletion."
+---
+
+Your data belongs to you. OneRep gives you several ways to get it out — a full export you can save to your device, a REST API and MCP endpoint for programmatic access, and diary sharing for coaches and training partners. All of these are available from **Settings → Data & account**.
+
+## Exporting your data
+
+The data export produces a single JSON file containing a complete snapshot of your OneRep account. The export includes your food logs, water logs, workout history, body measurements, recipes, custom foods, supplement logs, Coach memory, and preferences. The file is signed with a verification code so you can confirm it hasn't been tampered with after download.
+
+<Steps>
+  <Step title="Open Settings">
+    Tap the settings icon and navigate to **Data & account**.
+  </Step>
+  <Step title="Tap Export my data">
+    Tap **Export my data**. OneRep prepares the export — this takes a moment for large accounts.
+  </Step>
+  <Step title="Save or share the file">
+    On mobile, the system share sheet opens so you can save the file to your Files app, send it to yourself by email, or pass it to another app. On the web, the file downloads directly.
+  </Step>
+</Steps>
+
+<Note>
+  Exports are a full account snapshot for personal backup. Partial exports — for example, just your food logs or just your workouts — are not currently supported. If you need specific data programmatically, the API is a better fit.
+</Note>
+
+### What the export includes
+
+The export file contains everything stored against your account:
+
+- Food diary entries, meal categories, and custom foods
+- Water and supplement logs
+- Workout logs, training templates, and active workout state
+- Body measurements and check-ins
+- Recipes and meal presets
+- Coach memory, goals, and check-ins
+- Diary shares and their status
+- Your preferences and targets
+
+The export does not include authentication credentials, billing records, or data from other users' diaries that they shared with you.
+
+## Programmatic access: REST API and MCP
+
+If you want to read your data from a script, a spreadsheet integration, or an AI assistant, OneRep offers two programmatic interfaces that use the same data your app shows you.
+
+<CardGroup cols={2}>
+  <Card title="REST API" icon="code" href="/api/overview">
+    HTTP endpoints for your scripts and automations
+  </Card>
+  <Card title="MCP endpoint" icon="robot" href="/api/overview">
+    Model Context Protocol for Claude and other AI clients
+  </Card>
+</CardGroup>
+
+You create API keys in **Settings → API & MCP**. Each key has a name you choose (like "laptop Claude" or "weekly script"), a scope (read or read-and-write), and is shown in full exactly once at creation — after that, only the first few characters are displayed. You can revoke any key at any time. See [Privacy controls](/settings/privacy) for details on how keys are stored.
+
+## Diary sharing
+
+You can give a coach, training partner, or anyone else read-only access to your food diary without sharing your account credentials. Sharing is invitation-based: you enter their email address in **Settings → Privacy & sync → Sharing**, and they receive a link to accept.
+
+Shares come with a scope that covers diary access, nutrition reports, and the ability to leave comments. You can see all active and pending shares in the same section and revoke any of them immediately. Revoking a share cuts off access straight away — the person will no longer be able to view your diary.
+
+<Tip>
+  If you are waiting for someone to accept an invitation, tap the send icon next to their pending share to copy or resend the invite link.
+</Tip>
+
+## Deleting your account
+
+Account deletion is permanent and removes everything: logs, history, settings, API keys, and diary shares. There is no grace period and no recovery path once deletion completes.
+
+<Warning>
+  Export your data before deleting your account. Once deletion is confirmed, your data cannot be recovered.
+</Warning>
+
+To delete your account:
+
+<Steps>
+  <Step title="Export first (recommended)">
+    Follow the export steps above to save a copy of your data before proceeding.
+  </Step>
+  <Step title="Go to Data & account">
+    Open **Settings → Data & account** and scroll to the **Delete account** section.
+  </Step>
+  <Step title="Type DELETE to confirm">
+    Type `DELETE` in the confirmation field. The deletion button becomes active only when the text matches exactly.
+  </Step>
+  <Step title="Confirm deletion">
+    Tap **Delete account**. OneRep removes all your data in batches and signs you out when complete.
+  </Step>
+</Steps>
+
+<Accordion title="Can I recover my account after deletion?">
+  No. Deletion is final. If you think you might return to OneRep, consider signing out instead — your data will be there when you sign back in.
+</Accordion>
+
+<Accordion title="What happens to my active diary shares after I delete my account?">
+  All outgoing shares are revoked as part of the deletion process. Anyone you had shared your diary with will lose access immediately.
+</Accordion>
+
+<Accordion title="Does cancelling my Pro subscription remove my data?">
+  No. Cancelling Pro removes access to Pro features at the end of your billing cycle but leaves your account and all your data untouched.
+</Accordion>

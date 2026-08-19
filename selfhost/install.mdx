@@ -1,0 +1,83 @@
+---
+title: "Install OneRep on Your Own Server or Local Machine"
+sidebarTitle: "Install"
+description: "Clone the repo, run one script, and every service starts automatically. Re-running is always safe — the installer is fully idempotent."
+---
+
+Installation is a single script. It handles secrets, backend deployment, environment wiring, and service startup in one pass. You do not need to configure anything before running it unless you plan to serve on a real domain (covered below).
+
+<Steps>
+  <Step title="Clone the repository">
+    Clone OneRep from GitHub and move into the `selfhost` directory, which contains the installer and the Docker Compose file:
+
+    ```sh
+    git clone https://github.com/an2tha/onerep.git
+    cd onerep/selfhost
+    ```
+  </Step>
+
+  <Step title="Run the installer">
+    Run the install script:
+
+    ```sh
+    ./install.sh
+    ```
+
+    The script asks one question — whether to enable anonymous telemetry (default yes; choosing no means no analytics script is built into the app at all). After that it runs without further input.
+
+    **What the script does:**
+
+    1. Writes `selfhost/.env` with freshly generated secrets
+    2. Brings up the Convex backend container
+    3. Deploys the Convex functions to the backend
+    4. Sets the deployment's environment variables
+    5. Builds and starts the datasource and the app
+
+    When it finishes it prints your admin key and the URLs where services are running:
+
+    | Service   | URL                      |
+    | --------- | ------------------------ |
+    | App       | `http://127.0.0.1:8081`  |
+    | Dashboard | `http://127.0.0.1:6791`  |
+
+    <Tip>
+      The installer also prints the food database import commands so you have them to hand. See the [Food Database](/selfhost/food-database) guide for the full walkthrough.
+    </Tip>
+  </Step>
+
+  <Step title="Verify the install">
+    Open `http://127.0.0.1:8081` in your browser. You should see the OneRep sign-in screen. Create an account — it will have full Pro access with no paywall.
+
+    The dashboard at `http://127.0.0.1:6791` is where you inspect data and manage backend environment variables.
+  </Step>
+</Steps>
+
+## Serving on a real domain
+
+The default configuration binds to `127.0.0.1`, which means it is only reachable from the machine it runs on. To make your install accessible from a phone, another machine, or the public internet, you need to configure a hostname before (or instead of) the first run.
+
+**The simplest approach** is to export `PUBLIC_HOST` before running `./install.sh`:
+
+```sh
+export PUBLIC_HOST=your-domain.tld
+./install.sh
+```
+
+**Alternatively**, edit the three origin variables in `selfhost/.env` directly after the first run, put TLS in front of ports 3210, 3211, and 8081, then re-run `./install.sh`:
+
+```sh
+# Edit selfhost/.env
+CONVEX_CLOUD_ORIGIN=https://convex.your-domain.tld
+CONVEX_SITE_ORIGIN=https://convex-site.your-domain.tld
+APP_URL=https://app.your-domain.tld
+```
+
+Every knob is documented in the comments at the top of `selfhost/install.sh` and in `selfhost/docker-compose.yml`.
+
+<Note>
+  A LAN address such as `http://192.168.1.10:3210` is enough to reach your install from a phone on the same network. Anything you carry around outside your home network wants TLS and a real hostname.
+</Note>
+
+## Re-running the installer
+
+Re-running `./install.sh` is safe at any time. The existing secrets in `selfhost/.env` are kept, and the deploy is idempotent — functions and environment variables are updated in place. Use this whenever you pull new changes or adjust configuration.

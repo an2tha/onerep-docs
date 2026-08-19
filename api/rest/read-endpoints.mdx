@@ -1,0 +1,437 @@
+---
+title: "OneRep REST API — Read (GET) Endpoints Reference"
+sidebarTitle: "Read Endpoints"
+description: "All GET endpoints available to read-scoped API keys: route list, key info, goals, insights, per-day logs, date ranges, workouts, and measurements."
+---
+
+The read endpoints let you pull everything OneRep has logged — nutrition totals, workout sessions, body measurements, goals, and computed insights — using any key that carries the `read` scope. Every response is JSON and every date parameter follows the `YYYY-MM-DD` format.
+
+<Note>
+  Dates default to **today in UTC**. If you know the user's timezone, always pass an explicit date when calling near midnight — otherwise you may silently query the wrong calendar day.
+</Note>
+
+<Tip>
+  Use `GET /v1/days?start=&end=` for weekly questions. One request covers the entire range and costs a single unit of your hourly budget, instead of seven separate calls.
+</Tip>
+
+---
+
+## GET /v1 — Route list
+
+Returns the full list of routes available to your key, filtered by its scopes. This is the fastest way to confirm which endpoints your key can actually reach without consulting this page.
+
+**Example request**
+
+```bash
+curl -s https://<deployment>.convex.site/v1 \
+  -H "Authorization: Bearer onerep_sk_…" | jq
+```
+
+**Example response**
+
+```json
+[
+  { "method": "GET",  "path": "/v1" },
+  { "method": "GET",  "path": "/v1/me" },
+  { "method": "GET",  "path": "/v1/goals" },
+  { "method": "GET",  "path": "/v1/insights" },
+  { "method": "GET",  "path": "/v1/days/{date}" },
+  { "method": "GET",  "path": "/v1/days" },
+  { "method": "GET",  "path": "/v1/workouts" },
+  { "method": "GET",  "path": "/v1/measurements" }
+]
+```
+
+---
+
+## GET /v1/me — Key scopes and budget
+
+Returns the scopes attached to the current key and its hourly rate-limit budget. Use this to verify a key is alive and to check what it is allowed to do before making other calls.
+
+**Example request**
+
+```bash
+curl -s https://<deployment>.convex.site/v1/me \
+  -H "Authorization: Bearer onerep_sk_…" | jq
+```
+
+**Example response**
+
+```json
+{
+  "scopes": ["read"],
+  "limits": {
+    "readPerHour": 600,
+    "writePerHour": 60
+  }
+}
+```
+
+<ResponseField name="scopes" type="string[]">
+  The permission scopes granted to this key. Values are `"read"` and/or `"write"`.
+</ResponseField>
+
+<ResponseField name="limits.readPerHour" type="number">
+  Maximum read requests allowed per fixed hour window for this key.
+</ResponseField>
+
+<ResponseField name="limits.writePerHour" type="number">
+  Maximum write requests allowed per fixed hour window for this key.
+</ResponseField>
+
+---
+
+## GET /v1/goals — Calorie and macro targets
+
+Returns your configured nutrition targets, daily water goal, preferred weight unit, and stated training goal. These values are set inside the app and are read-only through the API.
+
+**Example request**
+
+```bash
+curl -s https://<deployment>.convex.site/v1/goals \
+  -H "Authorization: Bearer onerep_sk_…" | jq
+```
+
+**Example response**
+
+```json
+{
+  "calories": 2400,
+  "protein": 180,
+  "carbs": 240,
+  "fat": 80,
+  "waterMl": 3000,
+  "weightUnit": "kg",
+  "goal": "build_muscle"
+}
+```
+
+<ResponseField name="calories" type="number">
+  Daily calorie target in kcal.
+</ResponseField>
+
+<ResponseField name="protein" type="number">
+  Daily protein target in grams.
+</ResponseField>
+
+<ResponseField name="carbs" type="number">
+  Daily carbohydrate target in grams.
+</ResponseField>
+
+<ResponseField name="fat" type="number">
+  Daily fat target in grams.
+</ResponseField>
+
+<ResponseField name="waterMl" type="number">
+  Daily water target in millilitres.
+</ResponseField>
+
+<ResponseField name="weightUnit" type="string">
+  Preferred unit for displaying body weight (`"kg"` or `"lbs"`).
+</ResponseField>
+
+<ResponseField name="goal" type="string">
+  Your stated training goal as set in the app (for example `"build_muscle"` or `"lose_weight"`).
+</ResponseField>
+
+---
+
+## GET /v1/insights — Progression verdicts and monthly summaries
+
+Returns computed analysis across your log history: per-lift progression verdicts, recovery status compared to your baseline, and up to six monthly summaries. You can anchor all analysis windows to a specific date with the optional `?date=` query parameter.
+
+### Query parameters
+
+<ParamField query="date" type="string">
+  `YYYY-MM-DD` date to anchor the analysis windows. Defaults to today in UTC.
+</ParamField>
+
+**Example request**
+
+```bash
+curl -s "https://<deployment>.convex.site/v1/insights?date=2026-04-15" \
+  -H "Authorization: Bearer onerep_sk_…" | jq
+```
+
+**Example response**
+
+```json
+{
+  "progression": [
+    { "exercise": "Squat", "verdict": "progressing", "trend": "+5 kg over 4 weeks" }
+  ],
+  "recovery": {
+    "status": "recovered",
+    "vsBaseline": "+2 days since last rest day"
+  },
+  "monthlySummaries": [
+    {
+      "month": "2026-03",
+      "totalWorkouts": 14,
+      "avgCalories": 2350,
+      "avgWeightKg": 84.2
+    }
+  ]
+}
+```
+
+<ResponseField name="progression" type="object[]">
+  Array of per-lift progression verdicts. Each entry contains the exercise name, a verdict string, and a human-readable trend description.
+</ResponseField>
+
+<ResponseField name="recovery" type="object">
+  Your current recovery status compared to your personal baseline, including days since your last rest day.
+</ResponseField>
+
+<ResponseField name="monthlySummaries" type="object[]">
+  Up to six months of historical summaries, each containing workout count, average daily calories, and average body weight.
+</ResponseField>
+
+---
+
+## GET /v1/days/{date} — Everything logged on one date
+
+Returns the complete nutrition log, water intake, workout sessions, and body measurements recorded on a single calendar day. The `{date}` path parameter must be in `YYYY-MM-DD` format and defaults to today in UTC when omitted.
+
+### Path parameters
+
+<ParamField path="date" type="string">
+  The calendar date to retrieve in `YYYY-MM-DD` format. Defaults to today in UTC.
+</ParamField>
+
+**Example request**
+
+```bash
+curl -s https://<deployment>.convex.site/v1/days/2026-04-15 \
+  -H "Authorization: Bearer onerep_sk_…" | jq
+```
+
+**Example response**
+
+```json
+{
+  "date": "2026-04-15",
+  "nutrition": {
+    "calories": 2100,
+    "protein": 155,
+    "carbs": 210,
+    "fat": 72,
+    "entries": [
+      { "name": "Oats", "calories": 350, "meal": "breakfast" }
+    ]
+  },
+  "waterMl": 2500,
+  "workouts": [
+    {
+      "id": "w_abc123",
+      "durationMinutes": 55,
+      "exercises": [
+        { "name": "Squat", "sets": [{ "reps": 5, "weightKg": 100 }] }
+      ]
+    }
+  ],
+  "measurements": {
+    "weightKg": 84.5
+  }
+}
+```
+
+<ResponseField name="date" type="string">
+  The calendar date this record covers, in `YYYY-MM-DD` format.
+</ResponseField>
+
+<ResponseField name="nutrition" type="object">
+  Aggregated macro totals for the day plus the individual food log entries.
+</ResponseField>
+
+<ResponseField name="waterMl" type="number">
+  Total water logged for the day in millilitres.
+</ResponseField>
+
+<ResponseField name="workouts" type="object[]">
+  Workout sessions logged on this date, including exercises and sets.
+</ResponseField>
+
+<ResponseField name="measurements" type="object">
+  Body measurements recorded on this date, including `weightKg` if a weigh-in was logged.
+</ResponseField>
+
+---
+
+## GET /v1/days — Per-day totals over a date range
+
+Returns daily nutrition, water, and measurement totals for every calendar day between `?start=` and `?end=` (inclusive). Both parameters are required. This is more efficient than calling `GET /v1/days/{date}` repeatedly — the entire range counts as one budget unit.
+
+### Query parameters
+
+<ParamField query="start" type="string" required>
+  Start date in `YYYY-MM-DD` format. Inclusive.
+</ParamField>
+
+<ParamField query="end" type="string" required>
+  End date in `YYYY-MM-DD` format. Inclusive.
+</ParamField>
+
+**Example request**
+
+```bash
+curl -s "https://<deployment>.convex.site/v1/days?start=2026-04-09&end=2026-04-15" \
+  -H "Authorization: Bearer onerep_sk_…" | jq
+```
+
+**Example response**
+
+```json
+[
+  {
+    "date": "2026-04-09",
+    "calories": 2200,
+    "protein": 160,
+    "carbs": 220,
+    "fat": 75,
+    "waterMl": 3000,
+    "weightKg": 84.8
+  },
+  {
+    "date": "2026-04-10",
+    "calories": 1950,
+    "protein": 140,
+    "carbs": 190,
+    "fat": 68,
+    "waterMl": 2800,
+    "weightKg": null
+  }
+]
+```
+
+<ResponseField name="date" type="string">
+  The calendar date for this summary row in `YYYY-MM-DD` format.
+</ResponseField>
+
+<ResponseField name="calories" type="number">
+  Total calories logged on this date.
+</ResponseField>
+
+<ResponseField name="protein" type="number">
+  Total protein logged on this date in grams.
+</ResponseField>
+
+<ResponseField name="carbs" type="number">
+  Total carbohydrates logged on this date in grams.
+</ResponseField>
+
+<ResponseField name="fat" type="number">
+  Total fat logged on this date in grams.
+</ResponseField>
+
+<ResponseField name="waterMl" type="number">
+  Total water logged on this date in millilitres.
+</ResponseField>
+
+<ResponseField name="weightKg" type="number | null">
+  Body weight recorded on this date in kilograms, or `null` if no weigh-in was logged.
+</ResponseField>
+
+---
+
+## GET /v1/workouts — Recent workout sessions
+
+Returns your most recent workout sessions, sorted newest first. Use the optional `?limit=` parameter to control how many sessions are returned, up to a maximum of 50.
+
+### Query parameters
+
+<ParamField query="limit" type="number">
+  Maximum number of sessions to return. Accepts values from `1` to `50`. Defaults to the server's built-in default when omitted.
+</ParamField>
+
+**Example request**
+
+```bash
+curl -s "https://<deployment>.convex.site/v1/workouts?limit=5" \
+  -H "Authorization: Bearer onerep_sk_…" | jq
+```
+
+**Example response**
+
+```json
+[
+  {
+    "id": "w_abc123",
+    "date": "2026-04-15",
+    "durationMinutes": 55,
+    "exercises": [
+      {
+        "name": "Squat",
+        "sets": [
+          { "reps": 5, "weightKg": 100 },
+          { "reps": 5, "weightKg": 105 }
+        ]
+      },
+      {
+        "name": "Bench Press",
+        "sets": [
+          { "reps": 8, "weightKg": 80 }
+        ]
+      }
+    ]
+  }
+]
+```
+
+<ResponseField name="id" type="string">
+  Unique identifier for the workout session.
+</ResponseField>
+
+<ResponseField name="date" type="string">
+  Calendar date the session was logged on, in `YYYY-MM-DD` format.
+</ResponseField>
+
+<ResponseField name="durationMinutes" type="number">
+  Session duration in minutes, if recorded.
+</ResponseField>
+
+<ResponseField name="exercises" type="object[]">
+  Array of exercises performed, each containing a name and an array of sets with `reps` and optional `weightKg`.
+</ResponseField>
+
+---
+
+## GET /v1/measurements — Recent weigh-ins and measurements
+
+Returns your most recent body measurements and weigh-ins, sorted newest first. Use the optional `?limit=` parameter to control how many records are returned, up to a maximum of 100.
+
+### Query parameters
+
+<ParamField query="limit" type="number">
+  Maximum number of measurement records to return. Accepts values from `1` to `100`. Defaults to the server's built-in default when omitted.
+</ParamField>
+
+**Example request**
+
+```bash
+curl -s "https://<deployment>.convex.site/v1/measurements?limit=10" \
+  -H "Authorization: Bearer onerep_sk_…" | jq
+```
+
+**Example response**
+
+```json
+[
+  {
+    "date": "2026-04-15",
+    "weightKg": 84.5
+  },
+  {
+    "date": "2026-04-14",
+    "weightKg": 84.7
+  }
+]
+```
+
+<ResponseField name="date" type="string">
+  The date the measurement was recorded, in `YYYY-MM-DD` format.
+</ResponseField>
+
+<ResponseField name="weightKg" type="number">
+  Body weight recorded on this date in kilograms.
+</ResponseField>

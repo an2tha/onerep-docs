@@ -1,0 +1,137 @@
+---
+title: "Loading the Food Databases into Your OneRep Install"
+sidebarTitle: "Food Database"
+description: "Import USDA FoodData Central, Open Food Facts, and the wger exercise catalog. Each is independent — import one, two, or all three."
+---
+
+The datasource container starts empty: food search returns nothing until you import at least one catalog. Each catalog is independent and builds into its own database file, so you can import them in any order and the service serves whatever is present. Imports never interrupt the running service — each one builds a new file, verifies it, then swaps it in atomically.
+
+Run all commands from the `selfhost/` directory unless otherwise noted.
+
+<Tabs>
+  <Tab title="USDA FoodData Central">
+    USDA FoodData Central contains generic whole foods with lab-measured nutrition data, all in the public domain. This is the catalog that makes a search for "chicken breast" return an actual ingredient rather than a supermarket SKU. **Start here** — it is the most useful single catalog for day-to-day logging.
+
+    The download is approximately 3.1 GB and the import takes a few minutes.
+
+    <Steps>
+      <Step title="Download the USDA dataset">
+        From the `selfhost/` directory, download and unzip the USDA CSV export:
+
+        ```sh
+        curl -O https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_csv_2025-12-18.zip
+        unzip -q FoodData_Central_csv_2025-12-18.zip -d usda
+        ```
+      </Step>
+
+      <Step title="Copy the files into the container">
+        ```sh
+        docker compose cp usda datasource:/tmp/usda
+        ```
+      </Step>
+
+      <Step title="Run the import">
+        ```sh
+        docker compose exec datasource bun src/cli.ts import usda --csv-dir /tmp/usda/FoodData_Central_csv_2025-12-18
+        ```
+      </Step>
+
+      <Step title="Clean up the temporary files">
+        ```sh
+        docker compose exec datasource rm -rf /tmp/usda
+        ```
+      </Step>
+    </Steps>
+  </Tab>
+
+  <Tab title="wger Exercise Catalog">
+    The wger catalog provides the exercise database used throughout the training features. Unlike the food catalogs, there is no file to download — the importer fetches data directly from the wger API.
+
+    <Steps>
+      <Step title="Run the import">
+        From the `selfhost/` directory:
+
+        ```sh
+        docker compose exec datasource bun src/cli.ts import wger
+        ```
+
+        There is no download step and no cleanup required. The import fetches the catalog over the network and builds the database file in place.
+      </Step>
+    </Steps>
+  </Tab>
+
+  <Tab title="Open Food Facts">
+    Open Food Facts contains packaged products and barcodes from around the world. This is the catalog that makes barcode scanning useful outside the US, and it includes product photos that USDA does not have.
+
+    The full dump is large and the import is the most time-consuming of the three. Try a partial import first to confirm everything is working before committing to the full run.
+
+    <Note>
+      The gzip file is read as a stream and never fully expanded on disk, so you only need space for the download itself rather than the ~50 GB it would unpack to. Products with no barcode, no name, or no nutrition data are dropped during import.
+    </Note>
+
+    <Steps>
+      <Step title="Download the Open Food Facts dump">
+        From the `selfhost/` directory:
+
+        ```sh
+        curl -O https://static.openfoodfacts.org/data/openfoodfacts-products.jsonl.gz
+        ```
+      </Step>
+
+      <Step title="Copy the file into the container">
+        ```sh
+        docker compose cp openfoodfacts-products.jsonl.gz datasource:/tmp/off.jsonl.gz
+        ```
+      </Step>
+
+      <Step title="Run a partial import to verify (recommended first)">
+        A limit of 50,000 products takes minutes rather than hours and is enough to confirm barcode scanning and search are working:
+
+        ```sh
+        docker compose exec datasource bun src/cli.ts import off --file /tmp/off.jsonl.gz --limit 50000
+        ```
+      </Step>
+
+      <Step title="Run the full import when ready">
+        Once you are satisfied, re-run without the limit to import the entire catalog:
+
+        ```sh
+        docker compose exec datasource bun src/cli.ts import off --file /tmp/off.jsonl.gz
+        ```
+      </Step>
+
+      <Step title="Clean up the temporary file">
+        ```sh
+        docker compose exec datasource rm -f /tmp/off.jsonl.gz
+        ```
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Checking import stats
+
+To see how many records are in each catalog currently serving requests:
+
+```sh
+docker compose exec datasource bun src/cli.ts stats
+```
+
+## Rolling back an import
+
+Each import keeps the previous database file so you can roll back if something goes wrong. To revert a catalog to its previous state:
+
+```sh
+# Roll back USDA
+docker compose exec datasource bun src/cli.ts rollback usda
+
+# Roll back Open Food Facts
+docker compose exec datasource bun src/cli.ts rollback off
+
+# Roll back wger
+docker compose exec datasource bun src/cli.ts rollback wger
+```
+
+<Tip>
+  The datasource README at `apps/datasource/README.md` documents how the catalogs are ranked, the de-duplication passes that run during import, and how search merges results across catalogs when more than one is loaded.
+</Tip>

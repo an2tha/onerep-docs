@@ -1,72 +1,99 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mintlify Starter Kit",
+  "name": "OneRep",
+  "theme": "almond",
+  "favicon": "https://media.brand.dev/022e6f2c-385c-42e9-9098-0e21d8c861c6.svg",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#171a18",
+    "light": "#f4f3ef",
+    "dark": "#949498"
   },
-  "favicon": "/favicon.svg",
-  "navigation": {
-    "pages": [
-      {
-        "group": "Getting Started",
-        "pages": [
-          "index",
-          "quickstart"
-        ]
-      }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
+  "font": {
+    "headings": {
+      "family": "Instrument Sans Variable"
+    },
+    "body": {
+      "family": "Instrument Sans Variable"
     }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
   },
   "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
     "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://app.mintlify.com"
+      "type": "github",
+      "href": "https://github.com/an2tha/onerep"
     }
   },
-  "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "chatgpt",
-      "claude",
-      "perplexity",
-      "mcp",
-      "cursor",
-      "vscode"
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Guide",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "account-setup"
+            ]
+          },
+          {
+            "group": "Core Features",
+            "pages": [
+              "features/dashboard",
+              "features/nutrition",
+              "features/training",
+              "features/progress",
+              "features/coach"
+            ]
+          },
+          {
+            "group": "Self-Hosting",
+            "pages": [
+              "selfhost/overview",
+              "selfhost/install",
+              "selfhost/food-database",
+              "selfhost/mobile-apps",
+              "selfhost/integrations"
+            ]
+          },
+          {
+            "group": "Settings & Privacy",
+            "pages": [
+              "settings/account",
+              "settings/targets",
+              "settings/data-export",
+              "settings/privacy"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API & MCP",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "api/overview",
+              "api/authentication"
+            ]
+          },
+          {
+            "group": "REST API",
+            "pages": [
+              "api/rest/read-endpoints",
+              "api/rest/write-endpoints",
+              "api/rest/errors"
+            ]
+          },
+          {
+            "group": "MCP",
+            "pages": [
+              "api/mcp/overview",
+              "api/mcp/tools",
+              "api/mcp/oauth"
+            ]
+          }
+        ]
+      }
     ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
   }
 }

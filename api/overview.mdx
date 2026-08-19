@@ -1,0 +1,87 @@
+---
+title: "OneRep REST API & MCP Endpoint Overview"
+sidebarTitle: "Overview"
+description: "Access your training and nutrition log over HTTP or the Model Context Protocol — JSON in, JSON out, same keys, same scopes across both surfaces."
+---
+
+OneRep exposes your entire training and nutrition log through a REST API and a Model Context Protocol (MCP) endpoint. You can use either surface to read your history, post new entries, or connect an AI assistant — all with the same API key, the same scopes, and the same rate limits.
+
+## Base URL
+
+Your deployment has a unique base URL printed under **Settings → API & MCP** in the app. Copy it from there rather than assembling it by hand.
+
+```
+https://<your-convex-deployment>.convex.site/v1
+```
+
+All REST routes are relative to that base URL. The MCP endpoint lives at the same host under `/mcp`.
+
+## Format
+
+Every request and response uses JSON. Send `Content-Type: application/json` on any request that carries a body; responses always return `Content-Type: application/json`. Nothing else is parsed.
+
+## Two surfaces, one credential
+
+<CardGroup cols={2}>
+  <Card title="Authentication" icon="key" href="/api/authentication">
+    Create API keys, understand scopes, and learn the authorization header format.
+  </Card>
+  <Card title="Read Endpoints" icon="magnifying-glass" href="/api/rest/read-endpoints">
+    Retrieve days, workouts, measurements, goals, and computed insights.
+  </Card>
+  <Card title="Write Endpoints" icon="pencil" href="/api/rest/write-endpoints">
+    Log food, water, weight, workouts, and rest days programmatically.
+  </Card>
+  <Card title="MCP Endpoint" icon="robot" href="/api/mcp">
+    Connect AI assistants using the Model Context Protocol — same keys, same data.
+  </Card>
+</CardGroup>
+
+## Rate limits
+
+Rate limits are per key, not per account, so a runaway script cannot lock you out of your own app.
+
+| Scope | Limit |
+|-------|-------|
+| Reads | 600 per hour |
+| Writes | 60 per hour |
+
+Limits run in a fixed window. When you exceed a limit the API responds with `429` and a `Retry-After` header telling you how many seconds to wait before retrying. Retry on `429` and `5xx` responses; do not retry on `4xx` errors.
+
+## Verifying your key
+
+To confirm a key is valid without touching any logged data, call `GET /v1/me`:
+
+```sh
+curl -s https://<deployment>.convex.site/v1/me \
+  -H "Authorization: Bearer onerep_sk_…" | jq
+```
+
+A healthy response echoes the key's scopes and its remaining hourly budget:
+
+```json
+{
+  "scopes": ["read"],
+  "limits": {
+    "readPerHour": 600,
+    "writePerHour": 60
+  }
+}
+```
+
+`GET /v1` returns the full route list filtered to only the routes your key is allowed to call — useful when you are writing a new integration and want a quick reference without leaving your terminal.
+
+## Error shape
+
+Every error, regardless of status code, uses the same JSON structure:
+
+```json
+{
+  "error": {
+    "code": "insufficient_scope",
+    "message": "This key has read access, and POST /v1/water needs write."
+  }
+}
+```
+
+Branch your error handling on `code`; the human-readable `message` may be reworded between releases. The API never returns a stack trace.

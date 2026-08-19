@@ -1,0 +1,122 @@
+{
+  "projectType": "saas",
+  "projectName": "OneRep",
+  "projectDescription": "OneRep is an all-in-one fitness app that combines training, nutrition, recovery, and progress tracking with an AI Coach — available on web, iOS, and Android.",
+  "theme": "almond",
+  "primaryColor": "#171a18",
+  "lightColor": "#f4f3ef",
+  "darkColor": "#949498",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Guide",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "account-setup"
+            ]
+          },
+          {
+            "group": "Core Features",
+            "pages": [
+              "features/dashboard",
+              "features/nutrition",
+              "features/training",
+              "features/progress",
+              "features/coach"
+            ]
+          },
+          {
+            "group": "Self-Hosting",
+            "pages": [
+              "selfhost/overview",
+              "selfhost/install",
+              "selfhost/food-database",
+              "selfhost/mobile-apps",
+              "selfhost/integrations"
+            ]
+          },
+          {
+            "group": "Settings & Privacy",
+            "pages": [
+              "settings/account",
+              "settings/targets",
+              "settings/data-export",
+              "settings/privacy"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API & MCP",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "api/overview",
+              "api/authentication"
+            ]
+          },
+          {
+            "group": "REST API",
+            "pages": [
+              "api/rest/read-endpoints",
+              "api/rest/write-endpoints",
+              "api/rest/errors"
+            ]
+          },
+          {
+            "group": "MCP",
+            "pages": [
+              "api/mcp/overview",
+              "api/mcp/tools",
+              "api/mcp/oauth"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Daily dashboard with calorie and macro rings, meals, water, supplements, and configurable widgets",
+    "Training with exercise catalog, workout templates, weekly routines, rest timers, and volume trends",
+    "Nutrition with food search (USDA, Open Food Facts), barcode scanning, meal presets, recipes, and quick-log",
+    "Progress with body measurements, body-fat check-ins, charts, and custom metrics",
+    "AI Coach with text, voice, and image input across Briefing, Nutrition, and Training modes",
+    "Snap & Log photo food detection with a review step before anything is logged",
+    "Bring-your-own OpenRouter key for AI Coach running entirely on your credential",
+    "REST API and MCP endpoint on user-minted keys so scripts and assistants read the same log",
+    "Self-hosting via a single Docker Compose install script",
+    "Full data export and account deletion; analytics opt-in off by default",
+    "iOS and Android apps (Capacitor) plus installable PWA from the same React codebase"
+  ],
+  "publicApiSurface": [
+    "GET /v1 — route list filtered to the key's scopes",
+    "GET /v1/me — key scopes and hourly rate-limit budget",
+    "GET /v1/goals — calorie and macro targets, water goal, weight unit, stated goal",
+    "GET /v1/insights — progression verdicts, recovery vs baseline, monthly summaries",
+    "GET /v1/days/{date} — everything logged on one date",
+    "GET /v1/days?start=&end= — per-day totals over a date range",
+    "GET /v1/workouts — recent sessions, newest first",
+    "GET /v1/measurements — recent weigh-ins and measurements",
+    "POST /v1/water — log a drink { amountMl, date? }",
+    "POST /v1/food — log a food entry { name, calories, protein?, carbs?, fat?, meal?, date? }",
+    "POST /v1/weight — record a weigh-in { weightKg, date? }",
+    "POST /v1/workouts — record a workout { exercises, durationMinutes?, date? }",
+    "POST /v1/rest-days — mark rest days { dates: [YYYY-MM-DD] }",
+    "MCP tool: get_day",
+    "MCP tool: get_range",
+    "MCP tool: list_workouts",
+    "MCP tool: get_goals",
+    "MCP tool: get_training_insights",
+    "MCP tool: list_body_measurements",
+    "MCP tool: log_water",
+    "MCP tool: log_food",
+    "MCP tool: log_weight",
+    "MCP tool: log_workout",
+    "MCP tool: mark_rest_day"
+  ]
+}

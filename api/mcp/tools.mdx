@@ -1,0 +1,142 @@
+---
+title: "MCP Tools Reference — All 11 OneRep Tools"
+sidebarTitle: "Tools"
+description: "Complete reference for all 11 OneRep MCP tools: 6 read tools for querying your training and nutrition log, and 5 write tools for adding entries."
+---
+
+OneRep exposes 11 tools over MCP — deliberately coarse, so an assistant can describe your training and nutrition without burning its context window on dozens of thin wrappers. Read tools require a `read`-scoped token; write tools require a `write`-scoped token. A read-only token will not list or accept write tool calls.
+
+## Read tools (scope: `read`)
+
+These six tools are available to any token with at least the `read` scope.
+
+### `get_day`
+
+Returns everything logged on a single date: all food entries and their nutrition totals, water intake, completed workout sessions, and whether the day was marked as a rest day.
+
+**Key notes:**
+- Date format: `YYYY-MM-DD`
+- Defaults to today in UTC if no date is passed
+- Pass the date explicitly if the user's timezone may be behind or ahead of UTC around midnight
+
+---
+
+### `get_range`
+
+Returns per-day nutrition totals, workouts, and rest-day status between two dates (inclusive). Use this for weekly or monthly summaries — it is far more efficient than calling `get_day` once per day.
+
+**Key notes:**
+- Both start and end dates are `YYYY-MM-DD`
+- Ideal for questions like "how was my week?" or "what did I eat last month?"
+
+---
+
+### `list_workouts`
+
+Returns recent workout sessions in reverse chronological order (newest first), including exercises, sets, reps, and weights for each session.
+
+---
+
+### `get_goals`
+
+Returns your configured targets: calorie goal, macro targets, water goal, preferred weight unit, and stated training goal.
+
+---
+
+### `get_training_insights`
+
+Returns the app's analytical conclusions about your training:
+- Per-lift progression verdicts over the last 12 weeks
+- Recovery metrics compared against your own baseline
+- Six monthly training summaries
+
+---
+
+### `list_body_measurements`
+
+Returns recent weigh-ins. All values are in kilograms and centimetres regardless of your in-app unit preference.
+
+---
+
+## Write tools (scope: `write`)
+
+These five tools are available only to tokens with the `write` scope. They are not listed to, or callable by, a read-only token.
+
+### `log_water`
+
+Adds a water entry to a specified day.
+
+**Key notes:**
+- Amount must be between **1 and 5,000 ml**
+- Defaults to today in UTC if no date is passed
+
+---
+
+### `log_food`
+
+Adds a single food entry to a day.
+
+**Key notes:**
+- Calories are **required**
+- Protein, carbohydrates, and fat all default to zero if not provided
+- Defaults to today in UTC if no date is passed
+
+---
+
+### `log_weight`
+
+Records a body weight measurement for a day. If a weigh-in already exists for that day, it is replaced.
+
+**Key notes:**
+- Weight must be between **20 and 400 kg**
+- Defaults to today in UTC if no date is passed
+
+---
+
+### `log_workout`
+
+Records a completed workout session, including the exercises performed, sets, reps, and weights.
+
+**Key notes:**
+- Maximum **20 exercises** per session
+- Maximum **30 sets** per exercise
+- At most **2 sessions** can be logged per calendar day — a third attempt on the same date is refused with an explanation, not silently dropped
+
+---
+
+### `mark_rest_day`
+
+Marks one or more dates as deliberate rest days, so the app does not treat gaps in your training log as missed sessions.
+
+**Key notes:**
+- Accepts up to **31 dates** per call
+- Dates are `YYYY-MM-DD`
+
+---
+
+## Limits and behaviour
+
+### Rate limits
+
+Rate limits apply per token, not per account:
+
+| Scope | Limit |
+|---|---|
+| Read calls | 600 per hour |
+| Write calls | 60 per hour |
+
+This means one assistant running in a loop cannot lock you out of your own app — other tokens continue to work.
+
+### Date handling
+
+All date parameters default to **today in UTC**. If the user is in a timezone that is significantly ahead of or behind UTC, pass the date explicitly to avoid logging entries on the wrong day around midnight.
+
+### What is deliberately absent
+
+**No delete tools exist.** There is no way to remove a food entry, clear a day, or bulk-delete anything via MCP. Destructive operations are available in the app itself, where a human can confirm intent.
+
+**No AI-billed operations.** Coach features and photo logging are not accessible over MCP.
+
+### Tool errors
+
+Tool failures are returned as `tools/call` results with `isError: true` and a human-readable message — they are **not** transport-level errors. This means the assistant can read the error message and correct itself (for example, by adjusting a value that was out of range) rather than seeing a failed HTTP request.

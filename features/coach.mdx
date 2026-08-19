@@ -1,0 +1,130 @@
+---
+title: "AI Coach — Personalized Guidance for Every Goal"
+sidebarTitle: "Coach"
+description: "OneRep's AI Coach offers personalized briefings, meal logging, recipe generation, and workout planning across three conversational modes."
+---
+
+The AI Coach is a conversational assistant that knows your actual training, nutrition, and progress data — not a generic chatbot giving generic advice. Every response is grounded in what you've logged: your recent calories and protein, your workout history, your body measurements, your goals, and the patterns Coach has learned about you over time. Ask it anything, and it will use your numbers to give you something useful.
+
+Coach is available from its own tab in the main navigation, and also from a sheet inside an active workout — so you can ask for guidance mid-session without leaving the running timer.
+
+## Three modes
+
+<Tabs>
+  <Tab title="Briefing">
+    **Briefing** is the general-purpose mode. Use it to understand how you're doing, plan ahead, explore what-if scenarios, set goals, or get a read on your week without asking anything specific about food or training.
+
+    Briefing draws on all your data at once — nutrition consistency, training frequency, body progress, readiness signals — and synthesizes it into a coherent picture. It's the right mode when you want an honest assessment rather than help with a specific task.
+
+    Suggested starting points:
+    - *"What should I focus on today based on my recent activity?"*
+    - *"How is my progress trending, and what should I watch next?"*
+    - *"Help me explore a change to my goals without saving anything."*
+    - *"Give me a today check-in."*
+  </Tab>
+  <Tab title="Nutrition">
+    **Nutrition** mode focuses on food: meals, recipes, macros, adherence, and the gap between what you're eating and what you should be.
+
+    Use this mode to log a meal by description, generate a new recipe, customize an existing one, plan what to eat for the rest of the day, or understand why your protein numbers are off. Nutrition Coach can write food entries directly into your diary and save recipes to your recipe library — with your review and confirmation.
+
+    Suggested starting points:
+    - *"Review my recent nutrition and give me one thing to improve."*
+    - *"Create a practical recipe that fits my nutrition goals."*
+    - *"Help me plan simple meals for the next few days."*
+    - *"Help me make a meal from ingredients I already have."*
+  </Tab>
+  <Tab title="Training">
+    **Training** mode focuses on workouts: your routine, upcoming sessions, recovery status, exercise selection, and progression.
+
+    Use this mode to build a new workout, modify an existing preset, understand which muscles are ready to train, adapt a session to how you're feeling today, or get a full week of training mapped out. Training Coach can save new presets and update your weekly routine — again, with your review before anything changes.
+
+    Suggested starting points:
+    - *"Analyze my training this week and suggest my next workout."*
+    - *"Build a workout for me based on my routine and recent training."*
+    - *"Validate my current weekly routine for balance and recovery."*
+    - *"Adapt my next workout to my latest recovery data."*
+  </Tab>
+</Tabs>
+
+You can switch modes by tapping the tabs at the top of the Coach screen or by swiping left and right. Each mode has its own conversation history, so a recipe discussion in Nutrition doesn't mix with a recovery question in Training.
+
+## Input methods
+
+You can talk to Coach in three ways:
+
+- **Text** — Type freely in the composer. Multi-line input is supported; press Enter to send or Shift+Enter for a new line.
+- **Voice dictation** — Tap the microphone icon to start speech recognition. Your words appear in the composer as you speak, and you can review and edit before sending.
+- **Image attachments** — Attach a JPEG, PNG, or WebP image to any message. Coach can analyze photos of meals, progress photos, or anything else relevant to your question.
+
+## What Coach can do
+
+Coach is not just a conversational interface — it can take action on your data. Every change it proposes goes through a review step before anything is saved, and every write operation carries an undo payload so you can reverse it from the action history.
+
+### Personalized briefings
+
+Coach reads your recent training, nutrition, body measurements, readiness signals, memories, and check-ins before generating any response. When you ask for a briefing, you're getting analysis of your actual numbers, not a template.
+
+### Meal logging and recipe generation
+
+Coach can log food entries directly to your diary. Describe what you ate, and Coach estimates the macros, shows you a confirmation card, and writes the entry when you approve. It can also generate full detailed recipes — with ingredients, steps, prep time, and per-serving nutrition — and save them to your recipe library.
+
+### Workout modifications and weekly planning
+
+Coach can create new workout presets, modify existing ones, update your weekly routine, and plan a full seven-day training, nutrition, and recovery schedule. Proposed changes appear as a confirmation card before anything is applied, and the affected presets and schedule days are shown so you know exactly what will change.
+
+### Goals and check-ins
+
+Coach can create and pin goals with task lists, save energy/soreness/sleep/mood check-ins, and track progress toward what you've committed to. Goals pinned to Today appear on the dashboard so they stay visible.
+
+### Memory
+
+Coach remembers facts and preferences you tell it — dietary preferences, injury history, scheduling constraints, anything worth knowing. You can view and manage saved memories from the brain icon in the Coach header. Coach can also propose remembering something new, and you can delete any memory at any time.
+
+### Reversible operations
+
+Every change Coach makes to your data — a food log, a recipe, a workout preset, a routine update — is recorded in the action history with an undo option. Tap the history icon (clock) in the Coach header to review recent actions, search for a specific change, and undo anything Coach has done.
+
+<Note>
+  Proposed changes always appear as a confirmation card before being applied. You review the affected records, assumptions, and any warnings before tapping **Apply**. Nothing changes without your approval.
+</Note>
+
+## Guided states
+
+For common tasks, Coach offers focused entry points that ask you one targeted question instead of leaving you with a blank composer.
+
+<Accordion title="Create a recipe">
+  Opens a card that asks what you want to cook and offers example starting points. Coach generates a full recipe — ingredients, steps, prep and cook times, and nutrition — that you can save to your recipe library and optionally log as a meal.
+</Accordion>
+
+<Accordion title="Suggest a meal">
+  Asks about your cravings, available ingredients, time constraints, or nutrition goals. Coach proposes a meal option that fits your current targets and what you've already eaten today.
+</Accordion>
+
+<Accordion title="Modify a workout">
+  Displays your next scheduled workout and asks what needs to change — an injury, equipment limitation, time constraint, or preference. Coach adjusts the session while preserving as much productive training work as possible.
+</Accordion>
+
+<Accordion title="Explain a plateau">
+  Frames an investigation of your recent progress data: weight trend, protein adherence, training frequency, and recovery. Coach identifies likely causes and suggests one or two concrete adjustments, rather than a list of every possible variable.
+</Accordion>
+
+<Accordion title="Plan recovery">
+  Asks what constraint should shape the recovery adjustment — soreness level, sleep quality, or upcoming schedule — and creates a modified training and nutrition plan for the next day or two.
+</Accordion>
+
+<Accordion title="Plan a week">
+  Asks about the week ahead and produces a seven-day plan that balances training sessions, meal suggestions, and recovery notes. The plan can be saved and referenced from the action history.
+</Accordion>
+
+## Bring your own OpenRouter key
+
+By default, Coach runs on OneRep's AI allowance. If you want unlimited Coach access on your own terms, you can supply your own **OpenRouter API key**:
+
+1. Go to **Settings → Coach**.
+2. Paste your OpenRouter key into the API key field.
+3. OneRep validates the key against OpenRouter before saving it.
+4. Once saved, Coach runs on your credential instead of the app's allowance. Your key is stored securely, shown only as its last four characters, and is exempt from the monthly usage limit.
+
+<Tip>
+  With your own OpenRouter key, you can also select the specific model Coach uses — useful if you want to try a faster, cheaper model for everyday questions or a more capable one for complex planning.
+</Tip>

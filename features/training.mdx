@@ -1,0 +1,86 @@
+---
+title: "Training & Workouts — Build, Schedule, and Log Sessions"
+sidebarTitle: "Training"
+description: "Create workout presets, build a weekly routine, and track every set with rest timers, volume trends, and muscle-recovery estimates."
+---
+
+The Training page is where you plan and execute your workouts. You build reusable presets once, arrange them into a weekly routine, and then start sessions from a single screen. Every completed set is saved automatically, and the app tracks your training volume and muscle recovery over time so you always know what to do next.
+
+## Exercise catalog
+
+OneRep ships with a catalog of exercises covering strength, cardio, core, and mobility movements. Each exercise includes primary and secondary muscle information used by the volume and recovery analysis. You can browse and search the catalog from the **Exercises** tab in Progress.
+
+## Workout templates (presets)
+
+A **preset** is a saved, reusable workout. Each preset has a name, focus (Strength, Cardio, or Mobility), estimated duration, and an ordered list of exercises. Each exercise in a preset stores your default sets, reps, weight, and rest time so you have a starting point every time you run it.
+
+<CardGroup cols={2}>
+  <Card title="Create a preset" icon="plus">
+    Tap **New preset** on the Training page. Add exercises from the catalog, set default sets and reps, and give the preset a name.
+  </Card>
+  <Card title="Edit a preset" icon="pencil">
+    Tap the three-dot menu on any preset and choose **Edit**. Changes apply to future sessions; past logs are unchanged.
+  </Card>
+  <Card title="Duplicate a preset" icon="copy">
+    Tap **Duplicate** to copy a preset and modify it for a variation — useful for progressive overload cycles or deload weeks.
+  </Card>
+  <Card title="Log a past session" icon="clock-counter-clockwise">
+    Use **Log past session** to record a workout you completed without your phone. Choose the date and enter sets after the fact.
+  </Card>
+</CardGroup>
+
+## Weekly routine
+
+Assign presets to days of the week to build a **weekly routine**. Each day of the week grid can hold up to two workout slots. In edit mode, drag a preset card onto a day to assign it, or drag between days to rearrange. Long-press a preset to delete it.
+
+## Starting a workout
+
+<Steps>
+  <Step title="Open the Training page">
+    The hero area shows today's scheduled preset (or "Rest day" if nothing is assigned). Your week-to-date stats — workouts this week, effective sets, muscles recovered, and streak — ring the dial.
+  </Step>
+  <Step title="Hold to start">
+    Hold the center dial until it completes to launch the active workout. Or tap **Start** next to any preset in the list below to begin it immediately.
+  </Step>
+  <Step title="Work through your exercises">
+    The active workout screen shows each exercise in order. Log your weight and reps for each set and tap the checkmark to mark it complete.
+  </Step>
+  <Step title="Use rest timers">
+    After completing a set, a rest timer counts down automatically based on your preset's configured rest period. You can adjust the timer or skip it at any time.
+  </Step>
+  <Step title="Finish and save">
+    When all sets are done — or whenever you're ready — tap **Finish workout**. The session is saved to your history with its duration, exercises, and completed sets.
+  </Step>
+</Steps>
+
+## Active workout
+
+During a live session, each exercise shows your default weight and reps as a starting point. You can adjust any set before or after marking it complete. The rest timer starts automatically after each set so you don't have to watch the clock.
+
+## Two concurrent workout slots
+
+On days where you train twice — a morning lift and an evening run, for example — OneRep supports **two workout slots**. Each slot records a full, independent session. The Training page shows slot one complete and offers a swipe-to-start prompt for slot two if it's in your routine.
+
+## Cardio tracking
+
+Cardio exercises support distance, duration, and pace fields in place of sets and reps. Common formats — runs, bike rides, rows — are recognized automatically based on the exercise category. Completed cardio sessions show a compact summary (distance, pace) in your workout history.
+
+## Workout history
+
+Every completed workout is saved to your history. You can browse past sessions from the date picker on the Training page, edit a logged session to correct or add sets, or delete a session entirely. Rest days you deliberately mark are also saved so recovery estimates stay accurate.
+
+## Volume trends
+
+The **Training insights** section (expandable on the Training page) shows a weekly volume breakdown by muscle group. Each bar represents the effective sets that muscle received this week — primary sets count fully, supporting sets count as half — so you can see at a glance whether your quads are undertrained or your chest is getting too much volume.
+
+## Muscle-recovery estimates
+
+Below the volume breakdown, OneRep shows a **Muscle recovery** panel. Each muscle group is tagged as **Trained** (worked recently, likely not ready), **Recovering**, or **Ready** based on your recent sets and a simple recovery model. The dashboard rolls these signals into the readiness score shown each morning.
+
+<Note>
+  Volume and recovery estimates are derived from your logged sets and the muscle-group data attached to each exercise. The more consistently you log, the more accurate the estimates become.
+</Note>
+
+<Tip>
+  If Coach modifies your workout routine or creates a new preset, you'll see an **Apply** prompt in the conversation before anything changes. All Coach-made workout changes are reversible from the action history.
+</Tip>

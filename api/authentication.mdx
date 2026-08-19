@@ -1,0 +1,110 @@
+---
+title: "API Key Management and Authentication"
+sidebarTitle: "Authentication"
+description: "Create and manage OneRep API keys, set the right scope for your use case, and authenticate every request with a Bearer token."
+---
+
+Every request to the OneRep REST API and MCP endpoint must include an API key. You create keys inside the app, choose a scope when you create them, and pass them as a standard `Authorization` header. This page walks you through finding your base URL, minting a key, and using it correctly.
+
+## Finding your base URL
+
+Before you make any API calls, locate your personal deployment URL. Open **Settings → API & MCP** in the OneRep app — your base URL is displayed there. Copy it directly from the app rather than trying to construct it by hand.
+
+```
+https://<your-convex-deployment>.convex.site/v1
+```
+
+The MCP endpoint for the same deployment is at:
+
+```
+https://<your-convex-deployment>.convex.site/mcp
+```
+
+## Creating an API key
+
+<Steps>
+  <Step title="Open Settings → API & MCP">
+    In the OneRep app, navigate to **Settings → API & MCP**. Any existing keys are listed here, and this is also where you revoke them.
+  </Step>
+  <Step title="Name your key">
+    Give the key a name that describes where it will live — for example `home-dashboard`, `claude-assistant`, or `tuesday-lunch-script`. A descriptive name makes it obvious which key to revoke if something goes wrong.
+  </Step>
+  <Step title="Choose a scope">
+    Select **Read only** or **Read & write** depending on what your integration needs to do. Read only is the safer default — most integrations only ever read. You cannot change the scope after the key is created, so pick carefully.
+  </Step>
+  <Step title="Copy the key immediately">
+    After the key is created it is displayed exactly once. Copy it now and store it somewhere secure — a password manager or an environment variable in your deployment. OneRep stores only a hash of the key and cannot show it to you again.
+  </Step>
+</Steps>
+
+<Warning>
+  Your API key is shown only once at creation time. If you lose it, you must revoke it and mint a new one. There is no way to retrieve the original value.
+</Warning>
+
+## Using your key
+
+Pass the key as a `Bearer` token in the `Authorization` header on every request:
+
+```sh
+curl -s https://<deployment>.convex.site/v1/me \
+  -H "Authorization: Bearer onerep_sk_…" | jq
+```
+
+For requests that send a body, also include `Content-Type: application/json`:
+
+```sh
+curl -s https://<deployment>.convex.site/v1/water \
+  -H "Authorization: Bearer onerep_sk_…" \
+  -H "Content-Type: application/json" \
+  -d '{"amountMl": 500}' | jq
+```
+
+A missing, malformed, or revoked key always returns `401 unauthorized`.
+
+## Key properties
+
+- **Format:** Keys look like `onerep_sk_…`
+- **Shown once:** The value is displayed only at creation; store it immediately
+- **Stored hashed:** OneRep stores a SHA-256 hash — nobody can read the original key back out
+- **Limit:** You can have up to **10 live keys** per account at any time
+- **Revocation:** Open **Settings → API & MCP**, find the key by name, and revoke it. Revocation takes effect on the next request
+
+## Scopes
+
+Every key carries a scope that determines which routes it can call.
+
+| Scope | What it allows |
+|-------|----------------|
+| **Read only** | All `GET` routes — days, workouts, measurements, goals, insights |
+| **Read & write** | All `GET` routes **plus** all `POST` routes — logging food, water, weight, workouts, and rest days |
+
+Read-only enforcement is strict: a `POST` route called with a read-only key returns `403 insufficient_scope` immediately, before any work happens. There is no way to persuade a read-only key to write.
+
+<Note>
+  Scope cannot be changed after a key is created. If you need a different scope, revoke the existing key and mint a new one.
+</Note>
+
+## Rate limits
+
+Rate limits apply per key, not per account, so separate integrations do not compete with each other.
+
+| Operation type | Limit |
+|----------------|-------|
+| Reads (`GET` routes) | 600 per hour |
+| Writes (`POST` routes) | 60 per hour |
+
+Limits run in a fixed window. When you exceed a limit, the API responds with `429 rate_limited` and a `Retry-After` header indicating how many seconds to wait. Retry on `429` and server errors (`5xx`); do not retry on client errors (`4xx`).
+
+## Connecting AI assistants
+
+AI clients that speak the Model Context Protocol — including Claude Desktop — can connect using the same keys described above, or via OAuth. With OAuth, the client handles the authorization flow automatically: you open a browser, approve access, and the connection appears under **Settings → API & MCP → Connected apps**, where you can revoke it with one tap. No key copying required.
+
+If a client asks for a Client ID and Client Secret, go to **Settings → API & MCP → New OAuth client**, enter the redirect URI the client shows you, and paste the credentials back. The secret is shown once, exactly like an API key.
+
+## Privacy
+
+<Warning>
+  An API key is your whole log. Anything holding it can read every day you have ever logged — and a read & write key can add entries that appear in your totals, streaks, and weekly report. Treat it exactly like a password: never commit it to source control, and prefer a read-only key unless your integration genuinely needs to write.
+</Warning>
+
+Revoking a key is immediate. It does not undo anything already written; use the app's normal controls for that.

@@ -1,0 +1,79 @@
+---
+title: "OneRep REST API — Error Handling and Status Codes"
+sidebarTitle: "Errors"
+description: "Error response shape, all status codes and error codes returned by the OneRep REST API, and a troubleshooting guide for common problems."
+---
+
+Every error response from the OneRep API has the same predictable shape regardless of what went wrong. You can always count on a JSON body with an `error` object containing a `code` and a human-readable `message`. Use the `code` field to drive your error-handling logic — the `message` is written for whoever is reading logs at 2 am and may be reworded in future releases without notice.
+
+```json
+{
+  "error": {
+    "code": "insufficient_scope",
+    "message": "This key has read access, and POST /v1/water needs write."
+  }
+}
+```
+
+<Warning>
+  Always branch on `error.code`, never on `error.message`. Message strings can change; codes are stable.
+</Warning>
+
+---
+
+## Status codes and error codes
+
+The table below covers every status code the API returns, the `code` value you will see in the response body, and a plain description of what triggered it.
+
+| HTTP Status | `code` | What happened |
+|---|---|---|
+| `400` | `invalid_request` | The request was structurally or semantically wrong. Check the `message` for details on which field or value failed validation. |
+| `400` | `invalid_json` | The request body could not be parsed as JSON. Ensure your body is valid JSON and your `Content-Type` header is `application/json`. |
+| `400` | `unknown_field` | The request body contains a field name the API does not recognise. Check spelling against the endpoint's parameter list — unrecognised fields are never silently ignored. |
+| `401` | `unauthorized` | The API key is missing, malformed, wrong, or has been revoked. |
+| `403` | `insufficient_scope` | A read-only key attempted a write operation. The route exists, but the key's scope does not permit it. |
+| `404` | `not_found` | The path does not match any route. Call `GET /v1` to see the routes your key can reach. |
+| `405` | `method_not_allowed` | The path is valid but the HTTP method is wrong. Check the `Allow` response header for the accepted methods. |
+| `413` | `payload_too_large` | The request body exceeded the 64 KB limit. Split the payload or reduce its size. |
+| `415` | `unsupported_media_type` | The request was not sent as `application/json`. Add `Content-Type: application/json` to your request headers. |
+| `429` | `rate_limited` | You have exhausted your hourly budget (600 reads or 60 writes per hour, per key, in a fixed window). Read the `Retry-After` response header for the number of seconds to wait before retrying. |
+
+<Note>
+  Rate limits are **per key, not per account**. A single runaway script will not lock other keys — or you — out of the API.
+</Note>
+
+---
+
+## Troubleshooting
+
+<Accordion title="401 on every call">
+  Your key is wrong, revoked, or the `Authorization` header is missing the `Bearer ` prefix. Double-check that your header looks exactly like:
+
+  ```bash
+  -H "Authorization: Bearer onerep_sk_…"
+  ```
+
+  Note the space after `Bearer`. If the key was recently revoked in **Settings → API & MCP**, mint a replacement — a revoked key cannot be recovered, since only its hash is stored.
+</Accordion>
+
+<Accordion title="403 on a route that plainly exists">
+  You are using a read-only key against a `POST` route. The scope is fixed at creation time and cannot be changed after the fact. Mint a new **Read & write** key in **Settings → API & MCP** and use that instead.
+</Accordion>
+
+<Accordion title="400 unknown_field on a body that looks right">
+  Check the field name spelling carefully against the endpoint's parameter table. A single character difference — for example `"protien"` instead of `"protein"` — returns this error instead of logging a zero. The API refuses all fields it will not read, so there are no silent typos.
+</Accordion>
+
+<Accordion title="Everything reads as empty or missing">
+  Check the date. Every endpoint that accepts or defaults a date uses **today in UTC**. For users in timezones that are behind UTC, "today" in the app and "today in UTC" can be different calendar days for several hours around midnight. Always pass an explicit `date` parameter if you know the user's local date.
+</Accordion>
+
+---
+
+## Retry guidance
+
+Not all errors are worth retrying. Follow this pattern to avoid duplicate writes or wasted budget:
+
+- **Retry on `429`** — wait the number of seconds in the `Retry-After` header, then try again.
+- **Retry on `5xx`** — a server-side error may be transient.
+- **Do not retry on `4xx`** (other than `429`) — the request itself is the problem. Retrying an identical `400` or `403` will always produce the same result. Retrying a `POST` on a network timeout risks duplicate entries, because writes are not idempotent.

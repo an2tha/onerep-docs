@@ -1,0 +1,292 @@
+---
+title: "OneRep REST API — Write (POST) Endpoints Reference"
+sidebarTitle: "Write Endpoints"
+description: "All POST endpoints available to write-scoped API keys: programmatically log water intake, food entries, body weight, workout sessions, and rest days."
+---
+
+The write endpoints let you add entries to your OneRep log from any HTTP client — a smart scale, a meal-planning script, a shortcut on your phone, or anything else that can make a POST request. Every endpoint requires a key that carries the `write` scope, and every request body must be valid JSON sent with `Content-Type: application/json`.
+
+<Warning>
+  **Writes are not idempotent.** There are no idempotency keys. A retried `POST /v1/food` logs the same meal twice. Only retry on `429` and `5xx` responses — never retry on `4xx`.
+</Warning>
+
+<Warning>
+  **Unknown fields return 400.** The API refuses any field it does not recognise rather than silently ignoring it. A typo like `"protien"` returns an `unknown_field` error instead of logging zero grams. Check your spelling against the parameter tables below.
+</Warning>
+
+<Note>
+  **Nothing deletes.** There are no `DELETE` routes and no bulk-clear operations. Open the app to correct or remove an entry you did not mean to log.
+</Note>
+
+<Note>
+  **No AI-billed operations are available via the API.** Coach responses and photo logging are not reachable here.
+</Note>
+
+---
+
+## POST /v1/water — Log a water intake entry
+
+Adds a water intake entry to your log. You can optionally supply a date to back-fill a previous day; without one, the entry is assigned to today in UTC.
+
+**Bounds:** `amountMl` must be between **1 and 5000** millilitres.
+
+### Request body
+
+<ParamField body="amountMl" type="number" required>
+  Volume of water to log in millilitres. Must be between 1 and 5000.
+</ParamField>
+
+<ParamField body="date" type="string">
+  Calendar date to log the entry on, in `YYYY-MM-DD` format. Defaults to today in UTC.
+</ParamField>
+
+**Example request**
+
+```bash
+curl -s https://<deployment>.convex.site/v1/water \
+  -H "Authorization: Bearer onerep_sk_…" \
+  -H "Content-Type: application/json" \
+  -d '{"amountMl": 500, "date": "2026-04-15"}' | jq
+```
+
+**Example response**
+
+```json
+{
+  "logged": true,
+  "date": "2026-04-15",
+  "amountMl": 500
+}
+```
+
+---
+
+## POST /v1/food — Log a food entry
+
+Adds a food item to your nutrition log. Only `name` and `calories` are required; the macro fields are optional but recommended for accurate daily totals. If you omit `meal`, the entry is filed under `snack`.
+
+### Request body
+
+<ParamField body="name" type="string" required>
+  Name of the food or meal item.
+</ParamField>
+
+<ParamField body="calories" type="number" required>
+  Calorie count for this entry in kcal.
+</ParamField>
+
+<ParamField body="protein" type="number">
+  Protein content in grams.
+</ParamField>
+
+<ParamField body="carbs" type="number">
+  Carbohydrate content in grams.
+</ParamField>
+
+<ParamField body="fat" type="number">
+  Fat content in grams.
+</ParamField>
+
+<ParamField body="meal" type="string">
+  Meal slot to assign this entry to. One of `breakfast`, `lunch`, `dinner`, or `snack`. Defaults to `snack`.
+</ParamField>
+
+<ParamField body="date" type="string">
+  Calendar date to log the entry on, in `YYYY-MM-DD` format. Defaults to today in UTC.
+</ParamField>
+
+**Example request**
+
+```bash
+curl -s https://<deployment>.convex.site/v1/food \
+  -H "Authorization: Bearer onerep_sk_…" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Chicken breast",
+    "calories": 330,
+    "protein": 62,
+    "carbs": 0,
+    "fat": 7,
+    "meal": "lunch",
+    "date": "2026-04-15"
+  }' | jq
+```
+
+**Example response**
+
+```json
+{
+  "logged": true,
+  "date": "2026-04-15",
+  "entry": {
+    "name": "Chicken breast",
+    "calories": 330,
+    "protein": 62,
+    "carbs": 0,
+    "fat": 7,
+    "meal": "lunch"
+  }
+}
+```
+
+---
+
+## POST /v1/weight — Log a body weight measurement
+
+Records a body weight weigh-in. If a weigh-in already exists for the target date, this **replaces** it rather than creating a second entry — so it is safe to send an updated reading for the same day.
+
+**Bounds:** `weightKg` must be between **20 and 400** kilograms.
+
+### Request body
+
+<ParamField body="weightKg" type="number" required>
+  Body weight in kilograms. Must be between 20 and 400.
+</ParamField>
+
+<ParamField body="date" type="string">
+  Calendar date to record the weigh-in on, in `YYYY-MM-DD` format. Defaults to today in UTC.
+</ParamField>
+
+**Example request**
+
+```bash
+curl -s https://<deployment>.convex.site/v1/weight \
+  -H "Authorization: Bearer onerep_sk_…" \
+  -H "Content-Type: application/json" \
+  -d '{"weightKg": 84.5, "date": "2026-04-15"}' | jq
+```
+
+**Example response**
+
+```json
+{
+  "logged": true,
+  "date": "2026-04-15",
+  "weightKg": 84.5
+}
+```
+
+---
+
+## POST /v1/workouts — Log a workout session
+
+Records a complete workout session including all exercises and their sets. You may include a total duration and a specific date; without a date the session is assigned to today in UTC.
+
+**Limits:**
+- Maximum **20 exercises** per session.
+- Maximum **30 sets** per exercise.
+- Maximum **2 sessions per calendar day.** A third POST on the same date returns a `400` with an explanation — it is not silently dropped.
+
+### Request body
+
+<ParamField body="exercises" type="object[]" required>
+  Array of exercises performed in the session. Each object must include a `name` and a `sets` array.
+</ParamField>
+
+<ParamField body="exercises[].name" type="string" required>
+  Name of the exercise (for example `"Squat"` or `"Bench Press"`).
+</ParamField>
+
+<ParamField body="exercises[].sets" type="object[]" required>
+  Array of sets performed for this exercise. Each set must include `reps` and may include `weightKg`.
+</ParamField>
+
+<ParamField body="exercises[].sets[].reps" type="number" required>
+  Number of repetitions completed in this set.
+</ParamField>
+
+<ParamField body="exercises[].sets[].weightKg" type="number">
+  Load used for this set in kilograms. Omit for bodyweight exercises.
+</ParamField>
+
+<ParamField body="durationMinutes" type="number">
+  Total session duration in minutes. Optional.
+</ParamField>
+
+<ParamField body="date" type="string">
+  Calendar date to assign the session to, in `YYYY-MM-DD` format. Defaults to today in UTC.
+</ParamField>
+
+**Example request**
+
+```bash
+curl -s https://<deployment>.convex.site/v1/workouts \
+  -H "Authorization: Bearer onerep_sk_…" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "durationMinutes": 55,
+    "date": "2026-04-15",
+    "exercises": [
+      {
+        "name": "Squat",
+        "sets": [
+          { "reps": 5, "weightKg": 100 },
+          { "reps": 5, "weightKg": 105 },
+          { "reps": 5, "weightKg": 105 }
+        ]
+      },
+      {
+        "name": "Pull-up",
+        "sets": [
+          { "reps": 8 },
+          { "reps": 7 }
+        ]
+      }
+    ]
+  }' | jq
+```
+
+**Example response**
+
+```json
+{
+  "logged": true,
+  "date": "2026-04-15",
+  "sessionId": "w_abc123",
+  "durationMinutes": 55,
+  "exerciseCount": 2
+}
+```
+
+---
+
+## POST /v1/rest-days — Mark dates as rest days
+
+Marks one or more calendar dates as planned rest days. You can submit up to 31 dates in a single request, which makes it easy to pre-schedule a full month at once.
+
+**Limit:** Maximum **31 dates** per request.
+
+### Request body
+
+<ParamField body="dates" type="string[]" required>
+  Array of calendar dates to mark as rest days, each in `YYYY-MM-DD` format. Maximum 31 entries per request.
+</ParamField>
+
+**Example request**
+
+```bash
+curl -s https://<deployment>.convex.site/v1/rest-days \
+  -H "Authorization: Bearer onerep_sk_…" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "dates": [
+      "2026-04-16",
+      "2026-04-18",
+      "2026-04-20"
+    ]
+  }' | jq
+```
+
+**Example response**
+
+```json
+{
+  "logged": true,
+  "count": 3,
+  "dates": [
+    "2026-04-16",
+    "2026-04-18",
+    "2026-04-20"
+  ]
+}
+```

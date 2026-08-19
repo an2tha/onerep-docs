@@ -1,47 +1,98 @@
 ---
-title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+title: "Get Started with OneRep in Under 10 Minutes"
+sidebarTitle: "Quickstart"
+description: "Sign up, complete onboarding, log your first meal and workout, and explore your daily dashboard — everything you need to hit the ground running with OneRep."
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
-
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
-
-## Prerequisites
-
-Before you begin, you must have:
-
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
-
-## Get started
+This guide walks you through your first session in OneRep from account creation to a fully logged day. By the end you'll have a working dashboard, a meal on the books, and a workout in your history.
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
+  <Step title="Open the app">
+    Navigate to [app.onerep.life](https://app.onerep.life) in your browser. OneRep works on any modern browser and is also available as a PWA you can install to your home screen.
 
-    ```bash
-    npm install your-package
-    ```
+    <Tip>
+      On iOS, tap **Share → Add to Home Screen** in Safari. On Android, tap **Install app** in Chrome. Both give you a full-screen, offline-capable experience.
+    </Tip>
   </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
 
-    ```bash
-    your-cli init
-    ```
+  <Step title="Create your account">
+    Tap **Sign up** and choose how you'd like to register:
+
+    - **Email and password** — enter your email address, choose a password, and verify your email when the confirmation message arrives.
+    - **Continue with Google** — sign in with your Google account in a single step.
+
+    Once you're in, OneRep starts the onboarding flow automatically.
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
 
-    ```bash
-    your-cli start
-    ```
+  <Step title="Complete onboarding">
+    Onboarding takes about two minutes and sets up your personal dashboard. You'll be asked for:
+
+    - **Your goal** — the primary outcome you're working toward
+    - **Training focus** — strength, cardio, or mobility
+    - **Weight unit** — kg or lb
+
+    These choices populate your calorie and macro targets, configure the dashboard widgets, and give the AI Coach the context it needs for your first briefing. You can change any of these later in **Settings**.
+  </Step>
+
+  <Step title="Log your first meal">
+    From the **Today** tab, tap the **+** button next to any meal (Breakfast, Lunch, Dinner, or Snack).
+
+    <Tabs>
+      <Tab title="Search">
+        Type a food name in the search bar. OneRep searches USDA FoodData Central and Open Food Facts and returns results in seconds. Tap a result, confirm the portion size, and tap **Log**.
+      </Tab>
+      <Tab title="Barcode scan">
+        Tap the barcode icon and point your camera at a product. OneRep identifies it automatically. Confirm the serving and tap **Log**.
+      </Tab>
+      <Tab title="Photo">
+        Tap the camera icon and take a photo of your meal. The AI Coach detects what's on the plate, matches each item to a food record, and shows you a review before logging anything. Confirm the items and tap **Add to log**.
+      </Tab>
+    </Tabs>
+
+    Your calorie and macro rings on the dashboard update immediately after logging.
+  </Step>
+
+  <Step title="Log a workout">
+    Tap **Training** in the bottom navigation, then tap **Start workout**.
+
+    - Browse the exercise catalog or search by name.
+    - Add exercises to your session, enter your sets, reps, and weight.
+    - Use the built-in rest timer between sets — it vibrates or rings when time is up.
+    - Tap **Finish workout** when you're done.
+
+    Your session is saved to your training history and feeds into volume trends and muscle-recovery estimates.
+
+    <Note>
+      OneRep supports two concurrent workout slots, so you can keep a second session open while finishing the first — useful for supersets or splitting a session across the day.
+    </Note>
+  </Step>
+
+  <Step title="Check your dashboard">
+    Head back to **Today** to see everything in one view:
+
+    - **Calorie and macro rings** — how much of your targets you've hit so far
+    - **Water tracker** — log glasses or custom amounts toward your daily goal
+    - **Supplements** — any scheduled supplements for today
+    - **Scheduled training** — your planned workout if you built a weekly routine
+    - **Coach goals** — any active goals your AI Coach is tracking
+
+    Your dashboard is configurable: open **Settings → Training & app** to switch between standard and simple dashboard layouts, or change your primary training focus.
   </Step>
 </Steps>
 
-<Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
+## What to explore next
 
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
-</Tip>
+<CardGroup cols={2}>
+  <Card title="AI Coach" icon="brain" href="/features/coach">
+    Ask the Coach to log a meal, adjust this week's plan, or give you a progress briefing — in text, voice, or by sending a photo.
+  </Card>
+  <Card title="Account Setup" icon="user" href="/account-setup">
+    Update your goals, weight unit, daily targets, and privacy settings at any time.
+  </Card>
+  <Card title="Nutrition" icon="fork-knife" href="/features/nutrition">
+    Set custom macro targets, enable macro cycling for training and rest days, and build meal presets for foods you log often.
+  </Card>
+  <Card title="REST API & MCP" icon="code" href="/api">
+    Mint an API key in Settings and start querying your log from scripts, dashboards, or AI clients.
+  </Card>
+</CardGroup>

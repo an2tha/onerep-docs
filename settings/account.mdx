@@ -1,0 +1,71 @@
+---
+title: "Manage Your OneRep Account Settings"
+sidebarTitle: "Account"
+description: "View your profile, change your email or password, manage sign-in methods, and permanently delete your account and all its data."
+---
+
+Your account settings are the place to review what OneRep knows about you, manage how you sign in, and take action on your subscription. You can reach them any time by opening the main menu and tapping your name or email at the top of the Settings screen.
+
+## What you'll find in Account
+
+The Account view shows your display name, email address, and current plan (Free or Pro). It also surfaces your AI usage for the current month and any bring-your-own-key configuration, so you can see at a glance how much of your included allowance you've used.
+
+## Changing your email address
+
+If your deployment requires email verification, any change to your email address triggers a new verification message. Open your inbox, click the link, and the change takes effect. Until you verify the new address, your old one remains active.
+
+<Note>
+  If you signed up with a social or SSO provider, your email address is managed by that provider. You can update it there and it will sync on your next sign-in.
+</Note>
+
+## Resetting your password
+
+You can request a password reset from the sign-in screen without being logged in. OneRep sends a reset link to your registered email address. The link is single-use and expires after a short window — if it has expired, simply request another one.
+
+<Note>
+  Password reset requires a working email integration on your deployment. If your install does not have email configured, password reset is unavailable and you should contact whoever manages your OneRep server.
+</Note>
+
+## Connected sign-in methods
+
+Depending on your deployment, OneRep may offer sign-in via Google or an OpenID Connect provider in addition to email and password. If you signed up with one of these methods, your account is linked to that provider. Signing in through the same provider on any device will bring you straight to your account.
+
+To remove this device from your account without deleting your data, use **Sign out** rather than account deletion. Sign out is available at the bottom of the Account view under **Session**.
+
+## Signing out
+
+Tapping **Sign out** removes your account session from this device only. Your data stays intact in the cloud. If you have changes that haven't synced yet, OneRep will warn you before proceeding so you can decide whether to wait for them to sync.
+
+<Steps>
+  <Step title="Open Settings">
+    Tap the settings icon from the main navigation, then tap your name or email at the top of the screen.
+  </Step>
+  <Step title="Scroll to Session">
+    Scroll to the **Session** section at the bottom of the Account view.
+  </Step>
+  <Step title="Tap Sign out">
+    Tap **Sign out** and confirm. Your session is removed from this device.
+  </Step>
+</Steps>
+
+## Deleting your account
+
+Account deletion is permanent and cannot be undone. When you delete your account, every piece of data associated with it — food logs, training history, body measurements, Coach memory, API keys, and diary shares — is removed. There is no grace period and no recovery path.
+
+<Warning>
+  Deleting your account removes all your data immediately and permanently. Export your data first if you want a personal backup — see [Exporting Your Data](/settings/data-export).
+</Warning>
+
+To delete your account, go to **Settings → Data & account**, scroll to the **Delete account** section, type `DELETE` in the confirmation field, and tap the delete button. You will be signed out and redirected to the sign-in screen once the deletion is complete.
+
+<Accordion title="Will cancelling my Pro subscription delete my data?">
+  No. Cancelling OneRep Pro removes access to Pro features at the end of your billing period but leaves your account and all your data intact. Only explicit account deletion removes your data.
+</Accordion>
+
+<Accordion title="What happens to my diary shares when I delete my account?">
+  All outgoing diary shares are revoked immediately as part of the deletion process. Anyone you had shared your diary with will lose access.
+</Accordion>
+
+<Accordion title="I forgot my password and no longer have access to my email. What can I do?">
+  If you cannot receive the password reset email, contact support at [support@onerep.life](mailto:support@onerep.life) with details about your account. For self-hosted deployments, your server administrator may be able to assist.
+</Accordion>
