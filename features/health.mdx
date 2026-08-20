@@ -1,7 +1,7 @@
 ---
 title: "Health: Recovery Score, Dials, and Apple Health / Health Connect Sync"
 sidebarTitle: "Health"
-description: "Read your health score, choose which dials appear, open the Recovery, Sleep, Activity, Heart, and Body areas, and control which metrics OneRep is allowed to read from your phone."
+description: "Read your health score, choose which of the nine dials appear, create and log custom metrics, correct a bad reading, and control which metrics OneRep is allowed to read from your phone."
 ---
 
 The Health page answers one question before anything else: how you are doing right now, as a single score, with the areas behind it underneath. Everything it shows comes from Apple Health on iOS or Health Connect on Android, plus the check-ins you type yourself. Nothing is read from your phone unless you switch it on.
@@ -19,12 +19,22 @@ Beneath it sits a row of dials, one per area. Each dial shows that area's own sc
 | Activity | Exercise minutes and steps | `/health/activity` |
 | Heart | Resting rate and variability | `/health/heart` |
 | Body | Weight and composition | `/health/body` |
+| Nutrition | What you ate, against what you asked for | `/health/nutrition` |
+| Vitals | Glucose, pressure, oxygen, temperature | `/health/vitals` |
+| Mindfulness | Time spent deliberately doing nothing | `/health/mindfulness` |
+| Cycle | Cycle tracking, in your own hand | `/health/reproductive` |
+
+A dial only appears once there is something behind it: either the app measured that area natively, or you have at least one [custom metric](#custom-metrics) filed under it with a reading in the window. Dials with nothing to show are dropped rather than drawn empty, so the row grows as you track more.
+
+<Note>
+  **Cycle is off by default.** It is switched off in the same spirit as the intimate rows in the metric catalogue: a cycle dial sitting on the home screen of a phone somebody else might glance at is a disclosure the app would have made on your behalf. Switch it on in **Dials** if you want it.
+</Note>
 
 Under the dials, a short summary explains what moved, followed by **How to move it**: two to four concrete cards ("+2,400 steps", "+35 min sleep") with the points each would add to your score. **Trends and history** at the bottom opens every signal by week, month, or year.
 
 ### Choosing which dials appear
 
-The Health header carries two buttons: the sliders icon opens **Dials**, and the pencil opens [Correct a reading](#correcting-a-reading).
+The Health header carries three buttons: the plus logs a [custom metric](#logging-a-value), the pencil opens [Correct a reading](#correcting-a-reading), and the sliders open **Dials**.
 
 Tap the sliders icon to open **Dials** and switch areas on or off. This is purely about what you want to look at: switching off the Sleep dial does not stop sleep syncing, and its charts stay in Trends either way.
 
@@ -39,6 +49,8 @@ Dial choice is stored on your account, so it follows you across devices. Fewer d
 Every area screen follows the same shape: a headline stat, charts you can flip between week, month, and year, and an **About** section explaining where each number comes from and how far to trust it.
 
 Area screens hide charts with no data. If you have never recorded body fat, the body fat chart is not there, rather than sitting empty and implying you forgot something. **Trends** is the exception: it shows every series whether or not it has readings, because that page exists to tell you what the app can track.
+
+Recovery, Sleep, Activity, Heart, and Body each grade a signal the app measures itself. Nutrition, Vitals, Mindfulness, and Cycle have no maths of their own: everything on them is a [custom metric](#custom-metrics) you defined, so those four screens are empty until you make one.
 
 ### Body
 
@@ -86,20 +98,81 @@ The sheet carries an **Also update Apple Health** switch (Health Connect on Andr
 
 If your phone refuses the write, because you declined write permission or the record type cannot be written at all, the correction still stands inside OneRep. A refused write-back is never a reason to lose the edit.
 
-## Filling a custom metric from your phone
+## Custom metrics
 
-Custom metrics can read themselves off your phone. When you create one, tap **Fill from Apple Health** and pick a catalogue entry: blood glucose, blood pressure, caffeine, VO2 max, and everything else the two stores expose beyond the ten OneRep scores on.
+Anything OneRep does not track for you, you can track yourself: migraines, espressos, blood glucose, whether you stretched. Custom metrics used to live on Progress. They now live here, filed under the dial they belong to and drawn alongside everything else.
 
-- The unit comes from the catalogue rather than from your description, because the unit the sync writes in is not negotiable
+### Creating one
+
+**Track something new** is a labelled row, not a fourth icon in the header. You will find it on the Health page and at the foot of every area screen, including the empty state, since somebody staring at "nothing filed here yet" is the person most likely to want one.
+
+Describe what you want to track and OneRep sets up the controls: a **counter** for whole things tallied through the day, a **number** for a figure typed once, a **toggle** for did-it-or-not. Give it a target if you have one. You can also ask Coach to build one for you.
+
+### Filling one from your phone
+
+The builder offers an optional **Fill from Apple Health** step (Health Connect on Android). Pick a catalogue entry and the sync fills the metric in day by day: blood glucose, blood pressure, caffeine, VO2 max, and everything else the two stores expose beyond the ten OneRep scores on.
+
+- The unit comes from the catalogue rather than from your description. The sync writes mmol/L whatever the card claims to be showing, and a card labelled mg/dL over an mmol/L number is worse than no card
 - Metrics your phone cannot deliver stay on the list, greyed, wearing the reason. "Your platform has no record for this" is a better answer than a metric that quietly is not there
-- Typing a value yourself marks that day as yours, and the sync stops overwriting it
+- Binding is a second tap on purpose. Most metrics people invent have no reading behind them anywhere
 - **Type it myself** at the top of the list is the way back to an ordinary manual metric
 
-A bound metric is labelled **Read from Apple Health** wherever it appears. See [Progress](/features/progress) for the rest of the metric builder, and [the catalogue](/features/health-metrics) for every signal you can point one at.
+See [the catalogue](/features/health-metrics) for every signal you can point one at.
+
+### Which dial it lands on
+
+You do not file a metric yourself. A **bound** metric is filed by the catalogue group of the signal it reads: a glucose metric lands on Vitals whichever screen you created it from. The heart-rate family (resting rate, heart rate, walking average, HRV, heart rate recovery) is pulled back onto **Heart** by name, because separating walking heart rate from the resting rate it belongs beside would be a filing error you have to undo in your head every time.
+
+An **unbound** metric has no catalogue group, so it files by the tab you chose when you made it:
+
+| Tab | Dial |
+|---|---|
+| Body | Body |
+| Nutrition | Nutrition |
+| Training | Activity |
+
+### Logging a value
+
+The plus in the Health header opens a sheet listing every custom metric you have, grouped by tab. It steps back through the last seven days with arrows, or a calendar button to jump straight to a day.
+
+Number and counter metrics get a field in their own unit, with the decimals their step justifies. Toggle metrics get a switch. Each row says where its number came from: **you typed this**, **synced**, or **nothing recorded**.
+
+A value you type marks that day as yours, and the sync stops overwriting it.
+
+### Clearing a day
+
+Empty a row and save to delete that day's entry. Toggles get an explicit **Clear** next to the switch, because a switch has two positions and a day has three states: on, off, and never asked.
+
+<Warning>
+  **Clearing drops the manual flag, and bound metrics refill.** Once the day is no longer yours, a metric bound to Apple Health or Health Connect takes whatever the health store says on the next sync, so the figure you cleared may reappear. An unbound metric has nothing to refill from and stays empty. If you want a bound metric to stop taking readings, unbind it rather than clearing days one at a time.
+</Warning>
+
+### How custom metrics are scored
+
+Start with what the scoring refuses to do, because that is the whole design. **OneRep applies no clinical thresholds to anything.** There is no number in it that says a blood glucose of 5.4 is good and 7.1 is bad, no respiratory rate band, no "healthy" oxygen floor. Those figures exist in the literature attached to an age, a medication list, a time since the last meal, and a clinician who has met you. None of that is available to an app reading a watch.
+
+So a custom metric earns a score two ways, and no third:
+
+<CardGroup cols={2}>
+  <Card title="Against a target you set" icon="target">
+    Distance from the figure you asked for. Symmetric, because the app cannot know whether your target is a floor (protein) or a ceiling (sodium), and guessing wrong means congratulating you for triple the salt you meant to avoid. Counter and toggle metrics forgive an overshoot: doing more of a thing you set out to do is not a miss.
+  </Card>
+  <Card title="Against your own history" icon="chart-line">
+    With no target and at least 7 readings in the last 28 days, the score is stability: how close your recent readings sit to your own median. 100 means "where you normally are". It is not a claim that where you normally are is good.
+  </Card>
+</CardGroup>
+
+Anything else scores nothing at all. A metric with no target and too little history reads **no reading**, never 0. A zero is a grade, and it is one you did not earn. Metrics that cannot be scored are left out of a dial's average rather than counted as zero, so one unscorable metric cannot drag a dial down.
 
 <Note>
-  Custom metrics are moving onto this page, to be grouped and scored alongside the readings already here rather than sitting apart in Progress. The metrics you have keep their history and their bindings through the move, and the API surface does not change. The layout will be documented once it stops moving.
+  A dial only draws a ring when something under it carries a target. Nutrition, Vitals, Mindfulness, and Cycle have no maths of their own, so they are graded on the targets you set on your own metrics and left ungraded when you set none.
 </Note>
+
+### Metrics with nothing in them
+
+A metric with no readings in the window does not appear on its dial screen at all. It appears on **Trends**, under **Nothing recorded**, grouped by the dial it would belong to, each with one line saying what would fill it: which reading it is waiting on from your phone, or that it fills when you log a figure or mark a day done.
+
+Trends is the complete inventory. Every other Health screen hides what is empty; this one does not, because a list of what you are not measuring is the only reading some of these will ever give you.
 
 ## Choosing what OneRep may read
 

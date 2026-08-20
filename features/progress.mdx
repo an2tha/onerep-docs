@@ -1,10 +1,10 @@
 ---
-title: "Progress Tracking: Charts, Check-ins, and Custom Metrics"
+title: "Progress Tracking: Body Check-ins, Measurements, and Charts"
 sidebarTitle: "Progress"
-description: "Track body weight, measurements, and body fat with daily check-ins. View nutrition and training summaries, charts, and user-defined custom metrics."
+description: "Track body weight, measurements, and body fat with daily check-ins. View nutrition and training summaries and charts of everything you have logged."
 ---
 
-The Progress page gives you a longer view of how you're doing. While the dashboard focuses on today, Progress looks across the past week and beyond: body weight trends, nutrition consistency, training volume, and any custom metrics you've decided to track. The three nested rings at the top of the page show your last seven days of body check-ins, nutrition logging, and training in a single instrument.
+The Progress page gives you a longer view of how you're doing. While the dashboard focuses on today, Progress looks across the past week and beyond: body weight trends, nutrition consistency, and training volume. The three nested rings at the top of the page show your last seven days of body check-ins, nutrition logging, and training in a single instrument.
 
 ## Body weight check-ins
 
@@ -85,46 +85,8 @@ The **Training** tab shows workouts completed, total sets logged, and active day
 
 Charts throughout the Progress page show your data over time with connected point plots. Body weight and circumference charts show each logged check-in as a point; trend lines help you see direction through daily variation. Nutrition charts show day-by-day calorie and protein bars so you can spot patterns in consistency.
 
-## User-defined custom metrics
+## Custom metrics have moved
 
-You can add any metric you want to track that isn't covered by the built-in check-ins.
+Custom metrics are no longer created or shown here. They live on the [Health](/features/health) page, filed under the dial they belong to and scored against your own history. Nothing was lost in the move: every metric kept its definition, its history, and its binding to Apple Health or Health Connect.
 
-<CardGroup cols={2}>
-  <Card title="Counter" icon="plus-circle">
-    Increment and decrement by a fixed step. Useful for tracking servings, doses, or any countable unit.
-  </Card>
-  <Card title="Number" icon="hash">
-    Free numeric entry with optional target guidance. Supports decimals for metrics like hours of sleep or kilometers run.
-  </Card>
-  <Card title="Toggle" icon="toggle-right">
-    A yes/no or done/not-done habit tracker. Mark it done for the day with a single tap.
-  </Card>
-  <Card title="Sparkline trend" icon="chart-line">
-    Every custom metric automatically shows a compact bar chart of recent values so you can see momentum at a glance.
-  </Card>
-</CardGroup>
-
-Custom metrics are organized by tab (**Body**, **Nutrition**, or **Training**) so they appear alongside the data they're related to. **Track something else** opens the metric builder, or you can ask Coach to generate one for you.
-
-<Note>
-  Custom metrics are moving from Progress onto the [Health](/features/health) page, where they will be grouped and scored alongside the rest of your signals. The metrics themselves, and everything the API does with them, are unaffected. This page will describe the new arrangement once it settles.
-</Note>
-
-### Filling a metric from Apple Health or Health Connect
-
-The metric builder has a **Fill from Apple Health** row (Health Connect on Android). Tap it to pick any signal in the [platform catalogue](/features/health-metrics) that OneRep does not already score on: blood glucose, blood pressure, caffeine, VO2 max, mindful minutes, and the rest. The sync then fills that metric in day by day.
-
-- The unit comes from the catalogue, not from how you described the metric
-- Signals your phone cannot deliver are shown greyed with the reason rather than hidden
-- Typing a value yourself marks that day as yours, and the sync stops overwriting it
-- Choose **Type it myself** for an ordinary manual metric
-
-A bound metric is labelled **Read from Apple Health** in the metric list.
-
-<Note>
-  Custom metrics update one entry per day. Logging the same metric twice on the same day updates the existing entry rather than creating a duplicate.
-</Note>
-
-<Tip>
-  Ask Coach to create a custom metric for you. Say "track caffeine in 50 mg increments" or "track my daily step count with a 10,000 target", and Coach will configure the controls, unit, and target. The metric shows up in Progress immediately.
-</Tip>
+Progress is now what its name says: body check-ins, their charts, and the nutrition and training summaries above.

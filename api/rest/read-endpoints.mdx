@@ -586,7 +586,7 @@ curl -s "https://<deployment>.convex.site/v1/custom-metrics?tab=body&days=14" \
 </ResponseField>
 
 <ResponseField name="healthMetricKey" type="string | null">
-  The catalogue signal this metric is bound to, or `null` when the user types it in.
+  The catalogue signal this metric is bound to, or `null` when the user types it in. A bound metric is filed onto the Health dial matching its catalogue group; an unbound one files by its `tab`.
 </ResponseField>
 
 <ResponseField name="entries[].source" type="string">

@@ -90,6 +90,7 @@ Returns the user's own tracked metrics, the ones the app has no built-in screen 
 
 **Key notes:**
 - `tab` narrows to `body`, `nutrition`, or `training`; `days` accepts 7 to 90 and defaults to 30
+- `tab` is also what files an unbound metric onto a Health dial: body to Body, nutrition to Nutrition, training to Activity. A metric with a `healthMetricKey` ignores it and files by the catalogue group of the signal it reads
 - `healthMetricKey` is the platform signal the metric is bound to, or `null` when the user types it in
 - Each value says whether it was typed (`manual`) or came off the health sync (`synced`)
 
@@ -209,6 +210,7 @@ Defines a new metric for the user to track.
 **Key notes:**
 - `kind` decides how the app draws it: `counter` for whole things tallied through the day, `number` for a figure typed once, `toggle` for did-it-or-not
 - `title`, `tab`, `kind`, and `unit` are required; `step`, `target`, `accent`, and `description` have sensible defaults
+- `tab` decides which Health dial an unbound metric files under: body to Body, nutrition to Nutrition, training to Activity. Bound metrics file by their catalogue group instead
 - Pass a `healthMetricKey` from `list_platform_metrics` to have the health sync fill it in instead of the user typing it
 - **A key the catalogue does not know is refused, not stored.** A metric waiting forever on a reading nobody will send looks broken and is
 - This never touches an existing metric. Use `update_custom_metric` to change one

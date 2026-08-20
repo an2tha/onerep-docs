@@ -388,7 +388,7 @@ Creates a metric the user can track that OneRep has no built-in screen for: migr
 </ParamField>
 
 <ParamField body="tab" type="string" required>
-  Which tab it appears on. One of `body`, `nutrition`, or `training`.
+  One of `body`, `nutrition`, or `training`. For a metric with no `healthMetricKey`, this decides which Health dial it files under: body to Body, nutrition to Nutrition, training to Activity. A bound metric files by the catalogue group of the signal it reads and ignores this.
 </ParamField>
 
 <ParamField body="kind" type="string" required>
