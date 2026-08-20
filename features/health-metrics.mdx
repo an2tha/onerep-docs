@@ -4,13 +4,13 @@ sidebarTitle: "Health Metrics"
 description: "Every health signal OneRep can read, how Apple Health and Health Connect name it, its unit, how a day's readings are aggregated, and where one platform has no equivalent."
 ---
 
-Apple Health and Health Connect disagree more than their marketing suggests. This page lists all 43 signals OneRep understands, what each store calls it, and what happens on the platform that does not have it.
+Apple Health and Health Connect disagree more than their marketing suggests. This page lists all 70 signals OneRep understands, what each store calls it, and what happens on the platform that does not have it.
 
 Metrics marked with an asterisk are the ones OneRep scores on and draws its own screens for. Everything else you reach by creating a [custom progress metric](/features/progress) and choosing **Fill from Apple Health** (or Health Connect) when you make it. The sync then fills that metric in every day. This is how blood glucose gets tracked without the app pretending to have an opinion about what a good reading is.
 
 ## How to read these tables
 
-- **Apple Health** names the HealthKit identifier, without the `HKQuantityTypeIdentifier` prefix. HealthKit capitalises the VO2 max acronym and nothing else, so `VO2Max` is correct and not a typo.
+- **Apple Health** names the HealthKit identifier, without the `HKQuantityTypeIdentifier` prefix. HealthKit's spelling is its own: it capitalises the VO2 max acronym and nothing else, and it puts the noun first in `dietaryFatSaturated`. Both are correct as printed, not typos.
 - **Health Connect** names the record class, without the `Record` suffix.
 - **Aggregation** is how a day's readings collapse into one number. `Sum` for things that accumulate, `Average` for sampled signals where no single reading is more true than another, `Latest` for point measurements you take, `Sessions` for things with a start and an end.
 - **Plausible range** is a filter, not a target. A reading outside it is dropped on its own; the rest of the day survives. A health store aggregates every app on your phone, and one badly behaved writer must not be able to poison a baseline.
@@ -37,7 +37,7 @@ A dash means that platform has no equivalent type. Where that happens, the note 
 | Cycling cadence | `cyclingCadence` | `CyclingPedalingCadence` | rpm | Average | 1–250 |
 | Power | `cyclingPower` | `Power` | W | Average | 1–2500 |
 | Speed | `runningSpeed` | `Speed` | m/s | Average | 0–50 |
-
+| Steps cadence | — | `StepsCadence` | steps/min | Average | 1–400 |
 
 <Note>
   - **Total calories**: Apple Health reports active and resting energy separately rather than as one total.
@@ -45,6 +45,7 @@ A dash means that platform has no equivalent type. Where that happens, the note 
   - **Cycling distance**: Health Connect does not split distance by activity.
   - **Swimming distance**: Health Connect does not split distance by activity.
   - **Elevation gained**: Apple Health exposes flights climbed rather than metres ascended.
+  - **Steps cadence**: Apple Health records cycling cadence but has no walking or running cadence type.
 </Note>
 
 ### Vitals
@@ -61,6 +62,17 @@ A dash means that platform has no equivalent type. Where that happens, the note 
 | Respiratory rate | `respiratoryRate` | `RespiratoryRate` | breaths/min | Average | 3–80 |
 | Body temperature | `bodyTemperature` | `BodyTemperature` | °C | Latest | 25–45 |
 | Basal body temperature | `basalBodyTemperature` | `BasalBodyTemperature` | °C | Latest | 25–45 |
+| Walking heart rate | `walkingHeartRateAverage` | — | bpm | Average | 40–200 |
+| Heart rate recovery | `heartRateRecoveryOneMinute` | — | bpm | Max | 1–100 |
+| Wrist temperature | `appleSleepingWristTemperature` | — | °C | Latest | 25–45 |
+| Skin temperature change | — | `SkinTemperature` | °C | Latest | -10–10 |
+
+<Note>
+  - **Walking heart rate**: Health Connect stores raw heart rate samples without labelling which came from walking.
+  - **Heart rate recovery**: Health Connect has no heart rate recovery type.
+  - **Wrist temperature**: Health Connect reports a change from your baseline rather than an absolute temperature; see skin temperature change.
+  - **Skin temperature change**: Apple Health reports an absolute wrist temperature instead; see wrist temperature.
+</Note>
 
 ### Body
 
@@ -73,12 +85,15 @@ A dash means that platform has no equivalent type. Where that happens, the note 
 | Basal metabolic rate * | `basalEnergyBurned` | `BasalMetabolicRate` | kcal | Sum | 500–6000 |
 | Height | `height` | `Height` | cm | Latest | 50–260 |
 | Waist | `waistCircumference` | — | cm | Latest | 30–250 |
-
+| Body water | — | `BodyWaterMass` | kg | Latest | 5–200 |
+| BMI | `bodyMassIndex` | — | kg/m² | Latest | 8–100 |
 
 <Note>
   - **Bone mass**: Apple Health has no bone mass type; enter it as a custom metric on iOS.
   - **Basal metabolic rate**: Apple reports resting energy accumulated over the day; Health Connect reports a rate. Both land here as kcal per day.
   - **Waist**: Health Connect has no waist type; log it as a check-in measurement on Android.
+  - **Body water**: Apple Health has no body water type; enter it as a custom metric on iOS.
+  - **BMI**: Health Connect stores height and weight and expects apps to divide; there is no BMI record.
 </Note>
 
 ### Nutrition
@@ -91,12 +106,34 @@ A dash means that platform has no equivalent type. Where that happens, the note 
 | Fat eaten | `dietaryFatTotal` | `Nutrition` | g | Sum | 0–1000 |
 | Water | `dietaryWater` | `Hydration` | ml | Sum | 0–20000 |
 | Caffeine | `dietaryCaffeine` | `Nutrition` | mg | Sum | 0–3000 |
+| Fibre | `dietaryFiber` | `Nutrition` | g | Sum | 0–500 |
+| Sugar | `dietarySugar` | `Nutrition` | g | Sum | 0–1000 |
+| Sodium | `dietarySodium` | `Nutrition` | mg | Sum | 0–50000 |
+| Cholesterol | `dietaryCholesterol` | `Nutrition` | mg | Sum | 0–10000 |
+| Saturated fat | `dietaryFatSaturated` | `Nutrition` | g | Sum | 0–500 |
+| Monounsaturated fat | `dietaryFatMonounsaturated` | `Nutrition` | g | Sum | 0–500 |
+| Polyunsaturated fat | `dietaryFatPolyunsaturated` | `Nutrition` | g | Sum | 0–500 |
+| Trans fat | — | `Nutrition` | g | Sum | 0–200 |
+| Potassium | `dietaryPotassium` | `Nutrition` | mg | Sum | 0–50000 |
+| Calcium | `dietaryCalcium` | `Nutrition` | mg | Sum | 0–20000 |
+| Iron | `dietaryIron` | `Nutrition` | mg | Sum | 0–1000 |
+| Vitamin A | `dietaryVitaminA` | `Nutrition` | µg | Sum | 0–100000 |
+| Vitamin C | `dietaryVitaminC` | `Nutrition` | mg | Sum | 0–20000 |
+| Vitamin D | `dietaryVitaminD` | `Nutrition` | µg | Sum | 0–5000 |
+
+<Note>
+  - **Trans fat**: HealthKit has identifiers for saturated, monounsaturated and polyunsaturated fat but none for trans fat.
+</Note>
 
 ### Sleep
 
 | Metric | Apple Health | Health Connect | Unit | Aggregation | Plausible range |
 |---|---|---|---|---|---|
 | Sleep * | `sleepAnalysis` | `SleepSession` | min | Sessions | 0–1440 |
+| Deep sleep | `sleepAnalysis` | `SleepSession` | min | Sessions | 0–1440 |
+| REM sleep | `sleepAnalysis` | `SleepSession` | min | Sessions | 0–1440 |
+| Light sleep | `sleepAnalysis` | `SleepSession` | min | Sessions | 0–1440 |
+| Awake in bed | `sleepAnalysis` | `SleepSession` | min | Sessions | 0–1440 |
 
 ### Reproductive health
 
@@ -106,13 +143,18 @@ A dash means that platform has no equivalent type. Where that happens, the note 
 | Cervical mucus | `cervicalMucusQuality` | `CervicalMucus` | level | Latest | 0–5 |
 | Ovulation test | `ovulationTestResult` | `OvulationTest` | level | Latest | 0–4 |
 | Intermenstrual bleeding | `intermenstrualBleeding` | `IntermenstrualBleeding` | recorded | Latest | 0–1 |
+| Period | — | `MenstruationPeriod` | recorded | Latest | 0–1 |
+| Sexual activity | `sexualActivity` | `SexualActivity` | recorded | Sum | 0–50 |
+
+<Note>
+  - **Period**: Apple Health stores flow per day and works the period out in its own app; use menstrual flow on iOS.
+</Note>
 
 ### Mindfulness
 
 | Metric | Apple Health | Health Connect | Unit | Aggregation | Plausible range |
 |---|---|---|---|---|---|
 | Mindful minutes | `mindfulSession` | — | min | Sessions | 0–1440 |
-
 
 <Note>
   - **Mindful minutes**: Health Connect has no mindfulness type.
@@ -130,11 +172,19 @@ A dash means that platform has no equivalent type. Where that happens, the note 
 
 **Blood pressure.** Health Connect keeps both numbers in one `BloodPressure` record, so systolic and diastolic map to the same record class and are pulled apart on the way in.
 
-**Nutrition.** Health Connect files calories, protein, carbohydrates, and caffeine under a single `Nutrition` record. Reading these is useful when another app owns your food logging; if you log food in OneRep, you already have better numbers.
+**Nutrition.** Health Connect files every nutrient, from calories to vitamin D, under a single `Nutrition` record. Reading these is useful when another app owns your food logging; if you log food in OneRep, you already have better numbers. HealthKit has identifiers for saturated, monounsaturated, and polyunsaturated fat, but none at all for trans fat, so that row is Android only.
+
+**Temperature is two metrics, not one.** Wrist temperature and skin temperature change are deliberately separate entries. Apple stores an absolute overnight wrist temperature; Google stores a signed delta from your own baseline. Merging them would produce a series whose meaning silently changed the day you switched phones, so each platform gets its own row and neither pretends to be the other. A negative value is normal for the Android one and impossible for the Apple one.
+
+**Sleep stages.** Deep, REM, light, and awake-in-bed all come out of the same `sleepAnalysis` or `SleepSession` record as total sleep. They are stage totals pulled from one night's session, not four separate recordings.
 
 ## What each platform can read and write
 
-The native plugins read 39 of these metrics on iOS and 37 on Android. The gap is the platform gaps in the tables above, not a shortfall in the app.
+<Warning>
+  **25 of these are catalogued but not yet readable.** The catalogue recently grew by 25 entries: steps cadence, walking heart rate, heart rate recovery, wrist and skin temperature, body water, BMI, the four sleep stages, period and sexual activity, and fourteen nutrient rows. The native plugin mapping tables have not been extended to cover them yet. They are listed here and offered by `list_platform_metrics`, and a custom metric can be bound to one, but no reading arrives from a phone until the plugins catch up.
+</Warning>
+
+Of the rest, the plugins read what each platform can supply, minus the gaps noted under each table.
 
 Write-back is narrower: 34 metrics on iOS and 22 on Android. Nutrition, blood pressure, sleep, and the reproductive records refuse write-back on Android for structural reasons. A nutrition record needs a meal to hang off, blood pressure is a single record holding two numbers so half of it cannot be corrected on its own, and the sleep and reproductive records carry structure that one number cannot reconstruct.
 

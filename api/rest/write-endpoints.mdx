@@ -15,7 +15,7 @@ The write endpoints let you add entries to your OneRep log from any HTTP client:
 </Warning>
 
 <Note>
-  **Deleting needs a separate scope.** The `DELETE` routes require a **Full access** key, and they remove one row at a time by id. There are no bulk-clear operations. Every delete is undoable from the app.
+  **Deleting needs a separate scope.** The `DELETE` routes require a **Full access** key, and they remove one row at a time by id. There are no bulk-clear operations. Every delete is undoable from the app. `DELETE /v1/custom-metrics/{metricId}` is the widest of them: it takes the metric's whole history and any dashboard widget built on it. To stop a metric syncing without losing what it has collected, unbind it with `POST /v1/custom-metrics/{metricId}` and `healthMetricKey: null` instead.
 </Note>
 
 <Note>
@@ -373,6 +373,124 @@ The response returns the day's full list of pinned fields, which `GET /v1/health
 
 <Note>
   Overrides are per field. Correcting a resting heart rate leaves the same day's step count syncing normally.
+</Note>
+
+---
+
+## POST /v1/custom-metrics: Define a custom metric
+
+Creates a metric the user can track that OneRep has no built-in screen for: migraines, espressos, blood glucose, anything countable.
+
+### Request body
+
+<ParamField body="title" type="string" required>
+  Name of the metric. Up to 48 characters.
+</ParamField>
+
+<ParamField body="tab" type="string" required>
+  Which tab it appears on. One of `body`, `nutrition`, or `training`.
+</ParamField>
+
+<ParamField body="kind" type="string" required>
+  How the app draws it. `counter` for whole things tallied through the day, `number` for a figure typed once, `toggle` for did-it-or-not.
+</ParamField>
+
+<ParamField body="unit" type="string" required>
+  Unit label, up to 16 characters.
+</ParamField>
+
+<ParamField body="description" type="string">
+  One line about what the metric means. Up to 180 characters.
+</ParamField>
+
+<ParamField body="step" type="number">
+  How much one tap adds. Between 0.01 and 10,000, defaulting to 1.
+</ParamField>
+
+<ParamField body="target" type="number">
+  Optional daily target, between 0 and 1,000,000.
+</ParamField>
+
+<ParamField body="accent" type="string">
+  Colour the app draws it in: `food`, `water`, `workout`, or `progress`. Defaults to `progress`.
+</ParamField>
+
+<ParamField body="healthMetricKey" type="string">
+  A key from `GET /v1/health/metrics`, to have the health sync fill the metric in instead of the user typing it.
+</ParamField>
+
+**Example request**
+
+```bash
+curl -s https://<deployment>.convex.site/v1/custom-metrics \
+  -H "Authorization: Bearer onerep_sk_…" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Blood glucose",
+    "tab": "body",
+    "kind": "number",
+    "unit": "mmol/L",
+    "step": 0.1,
+    "healthMetricKey": "bloodGlucoseMmolL"
+  }' | jq
+```
+
+<Warning>
+  **An unknown `healthMetricKey` is rejected, not stored.** The app's picker cannot produce a bad key; an API client can, and a metric left waiting on a reading nobody will ever send looks broken and is. Fetch `GET /v1/health/metrics` and use a key from it.
+</Warning>
+
+---
+
+## POST /v1/custom-metrics/{metricId}: Update a definition
+
+Changes an existing metric's definition while keeping every value logged against it. Renaming a metric, moving it to another tab, or changing its target does not cost the user their history.
+
+Only the fields you send change. The body takes the same fields as creation, all optional, plus two nullable ones:
+
+<ParamField body="target" type="number | null">
+  New daily target, or `null` to drop the target entirely.
+</ParamField>
+
+<ParamField body="healthMetricKey" type="string | null">
+  A new catalogue key, or `null` to unbind the metric from the health sync. Unbinding leaves the values already stored alone.
+</ParamField>
+
+**Example request**
+
+```bash
+curl -s https://<deployment>.convex.site/v1/custom-metrics/m_9f2… \
+  -H "Authorization: Bearer onerep_sk_…" \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Morning glucose", "target": null}' | jq
+```
+
+---
+
+## POST /v1/custom-metrics/{metricId}/values: Set a day's value
+
+Writes one metric's value for one date, replacing whatever was there.
+
+### Request body
+
+<ParamField body="value" type="number | null" required>
+  The figure to record, or `null` to clear the day.
+</ParamField>
+
+<ParamField body="date" type="string">
+  Calendar date, in `YYYY-MM-DD` format. Defaults to today in UTC.
+</ParamField>
+
+**Example request**
+
+```bash
+curl -s https://<deployment>.convex.site/v1/custom-metrics/m_9f2…/values \
+  -H "Authorization: Bearer onerep_sk_…" \
+  -H "Content-Type: application/json" \
+  -d '{"date": "2026-04-15", "value": 5.4}' | jq
+```
+
+<Note>
+  The day is marked as typed, so a metric bound to the health sync keeps your figure rather than having it overwritten on the next sync. Sending `value: null` clears the day and hands a bound metric back to the health store. Clearing a day that holds nothing is an error, not a silent success.
 </Note>
 
 ---

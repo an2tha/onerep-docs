@@ -58,7 +58,7 @@ The sheet steps back through the last seven days, one at a time. Beyond a week y
 
 <Steps>
   <Step title="Pick the day">
-    Use the arrows either side of the date. Today is the default and the furthest forward you can go.
+    Use the arrows either side of the date, or the calendar button to jump straight to a day. Today is the default and the furthest forward you can go.
   </Step>
   <Step title="Type the right number">
     Enter what the reading should have been. Sleep is typed in hours even though it is stored in minutes, and weight follows your unit preference.
@@ -88,14 +88,18 @@ If your phone refuses the write, because you declined write permission or the re
 
 ## Filling a custom metric from your phone
 
-Custom progress metrics can read themselves off your phone. When you create one in Progress, tap **Fill from Apple Health** and pick a catalogue entry: blood glucose, blood pressure, caffeine, VO2 max, and everything else the two stores expose beyond the ten OneRep scores on.
+Custom metrics can read themselves off your phone. When you create one, tap **Fill from Apple Health** and pick a catalogue entry: blood glucose, blood pressure, caffeine, VO2 max, and everything else the two stores expose beyond the ten OneRep scores on.
 
 - The unit comes from the catalogue rather than from your description, because the unit the sync writes in is not negotiable
 - Metrics your phone cannot deliver stay on the list, greyed, wearing the reason. "Your platform has no record for this" is a better answer than a metric that quietly is not there
 - Typing a value yourself marks that day as yours, and the sync stops overwriting it
 - **Type it myself** at the top of the list is the way back to an ordinary manual metric
 
-A bound metric shows **Read from Apple Health** under its title in Progress. See [Progress](/features/progress) for the rest of the metric builder.
+A bound metric is labelled **Read from Apple Health** wherever it appears. See [Progress](/features/progress) for the rest of the metric builder, and [the catalogue](/features/health-metrics) for every signal you can point one at.
+
+<Note>
+  Custom metrics are moving onto this page, to be grouped and scored alongside the readings already here rather than sitting apart in Progress. The metrics you have keep their history and their bindings through the move, and the API surface does not change. The layout will be documented once it stops moving.
+</Note>
 
 ## Choosing what OneRep may read
 

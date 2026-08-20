@@ -1,14 +1,14 @@
 ---
-title: "Complete MCP Tool Reference for OneRep: All 23 Tools"
+title: "Complete MCP Tool Reference for OneRep: All 29 Tools"
 sidebarTitle: "Tools"
-description: "Complete reference for all 23 OneRep MCP tools: 8 read tools for querying your log, 8 write tools for adding and correcting entries, and 7 delete tools for removing them."
+description: "Complete reference for all 29 OneRep MCP tools: 10 read tools for querying your log, 11 write tools for adding and correcting entries, and 8 delete tools for removing them."
 ---
 
-OneRep exposes 23 tools over MCP. They are deliberately coarse, so an assistant can describe your training and nutrition without burning its context window on dozens of thin wrappers. Each tool belongs to exactly one scope, and a token is only shown the tools its scopes cover. A read-only token will not list or accept a write or delete tool call.
+OneRep exposes 29 tools over MCP. They are deliberately coarse, so an assistant can describe your training and nutrition without burning its context window on dozens of thin wrappers. Each tool belongs to exactly one scope, and a token is only shown the tools its scopes cover. A read-only token will not list or accept a write or delete tool call.
 
 ## Read tools (scope: `read`)
 
-These eight tools are available to any token carrying the `read` scope.
+These ten tools are available to any token carrying the `read` scope.
 
 ### `get_day`
 
@@ -84,9 +84,33 @@ Returns sessions read out of the platform health store (runs, rides, swims, and 
 
 ---
 
+### `list_custom_metrics`
+
+Returns the user's own tracked metrics, the ones the app has no built-in screen for, with each definition (unit, step, target, which tab it lives on) and its recent daily values, newest first.
+
+**Key notes:**
+- `tab` narrows to `body`, `nutrition`, or `training`; `days` accepts 7 to 90 and defaults to 30
+- `healthMetricKey` is the platform signal the metric is bound to, or `null` when the user types it in
+- Each value says whether it was typed (`manual`) or came off the health sync (`synced`)
+
+---
+
+### `list_platform_metrics`
+
+Returns the catalogue of Apple Health and Health Connect signals a custom metric can be bound to: key, label, unit, aggregation, the HealthKit identifier, the Health Connect record, and a `gap` note where one platform cannot supply it.
+
+**Read this before creating a metric with a `healthMetricKey` rather than guessing a key.** Guessed keys are refused.
+
+**Key notes:**
+- By default it lists only the bindable metrics. The ones the app already scores on and draws its own screens for are excluded unless you pass `all: true`
+- `group` narrows to one category: `activity`, `vitals`, `body`, `nutrition`, `sleep`, `reproductive`, or `mindfulness`
+- Answered from the catalogue itself, with no database read behind it
+
+---
+
 ## Write tools (scope: `write`)
 
-These eight tools require the `write` scope. They are not listed to, or callable by, a read-only token.
+These eleven tools require the `write` scope. They are not listed to, or callable by, a read-only token.
 
 ### `log_water`
 
@@ -163,7 +187,7 @@ Pins one field of one day to a figure the user gives you, and keeps the phone fr
 - Values outside the plausible range for the metric are **rejected, not clamped**. A slipped decimal point should fail loudly rather than settle into a baseline
 - Overrides are per field, so pinning a resting heart rate leaves that day's steps syncing normally
 - The call returns the day's full `manualFields` list, so you can see what else is pinned
-- Undoable from the app
+- Undoable from the app, including when the correction had to invent the day's row: undoing then removes the row rather than leaving the corrected number sitting in it
 
 ---
 
@@ -178,9 +202,45 @@ Records a cardio or activity session the phone cannot see: a watch OneRep has no
 
 ---
 
+### `create_custom_metric`
+
+Defines a new metric for the user to track.
+
+**Key notes:**
+- `kind` decides how the app draws it: `counter` for whole things tallied through the day, `number` for a figure typed once, `toggle` for did-it-or-not
+- `title`, `tab`, `kind`, and `unit` are required; `step`, `target`, `accent`, and `description` have sensible defaults
+- Pass a `healthMetricKey` from `list_platform_metrics` to have the health sync fill it in instead of the user typing it
+- **A key the catalogue does not know is refused, not stored.** A metric waiting forever on a reading nobody will send looks broken and is
+- This never touches an existing metric. Use `update_custom_metric` to change one
+- Undoable from the app, as is every other custom-metric write
+
+---
+
+### `update_custom_metric`
+
+Changes the definition of an existing metric while keeping every value already logged against it. Renaming a metric, moving it to another tab, or changing its target should not cost the user their history.
+
+**Key notes:**
+- Only the fields you pass move
+- `target: null` drops a target; `healthMetricKey: null` unbinds it from the health sync and leaves the stored values alone
+- An unknown `healthMetricKey` is refused here too
+
+---
+
+### `set_custom_metric_value`
+
+Writes one metric's value for one date, replacing whatever was there.
+
+**Key notes:**
+- The day is marked as typed, so a metric bound to the health sync will not have this figure overwritten on the next sync
+- `value: null` clears the day, after which a bound metric goes back to whatever the health store says
+- Clearing a day that has nothing on it is an error, not a silent success
+
+---
+
 ## Delete tools (scope: `delete`)
 
-These seven tools require the `delete` scope, which is separate from `write`. A key that can log a meal cannot remove one unless you gave it both. Every delete is undoable from the app.
+These eight tools require the `delete` scope, which is separate from `write`. A key that can log a meal cannot remove one unless you gave it both. Every delete is undoable from the app.
 
 | Tool | Removes |
 |---|---|
@@ -191,6 +251,11 @@ These seven tools require the `delete` scope, which is separate from `write`. A 
 | `delete_health_workout` | One imported health session, by the id from `list_health_workouts` |
 | `delete_health_day` | A single date's synced sleep, steps, heart rate, and HRV |
 | `unmark_rest_days` | The deliberate-rest marking from up to 31 dates |
+| `delete_custom_metric` | A custom metric, every value logged against it, and any dashboard widget built on it |
+
+<Note>
+  `delete_custom_metric` takes the history with it, and undo is the only way back. To stop a metric syncing without losing what it has collected, unbind it with `update_custom_metric` instead.
+</Note>
 
 <Note>
   Deleting synced data does not stop it coming back. A later device sync may re-import the same health workout or re-write the same day's readings. To stop a metric arriving at all, switch it off in **Settings → Health & wearables**.

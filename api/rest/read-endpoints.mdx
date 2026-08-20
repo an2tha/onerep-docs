@@ -40,7 +40,9 @@ curl -s https://<deployment>.convex.site/v1 \
   { "method": "GET",  "path": "/v1/workouts" },
   { "method": "GET",  "path": "/v1/measurements" },
   { "method": "GET",  "path": "/v1/health/days" },
-  { "method": "GET",  "path": "/v1/health/workouts" }
+  { "method": "GET",  "path": "/v1/health/workouts" },
+  { "method": "GET",  "path": "/v1/health/metrics" },
+  { "method": "GET",  "path": "/v1/custom-metrics" }
 ]
 ```
 
@@ -527,3 +529,124 @@ curl -s "https://<deployment>.convex.site/v1/health/days?start=2026-04-08&end=20
 <Warning>
   HRV is SDNN on Apple Health and RMSSD on Health Connect. The two are different statistics. Compare a person against their own baseline and never against a figure from the other platform.
 </Warning>
+
+---
+
+## GET /v1/custom-metrics: The user's own tracked metrics
+
+Returns the metrics the user defined for themselves, the ones the app has no built-in screen for, each with its definition and its recent daily values.
+
+### Query parameters
+
+<ParamField query="tab" type="string">
+  Only metrics on this tab. One of `body`, `nutrition`, or `training`.
+</ParamField>
+
+<ParamField query="days" type="number">
+  How many recent values to return per metric. Accepts 7 to 90, defaulting to 30.
+</ParamField>
+
+**Example request**
+
+```bash
+curl -s "https://<deployment>.convex.site/v1/custom-metrics?tab=body&days=14" \
+  -H "Authorization: Bearer onerep_sk_…" | jq
+```
+
+**Example response**
+
+```json
+[
+  {
+    "id": "m_9f2…",
+    "title": "Blood glucose",
+    "description": "Morning finger-prick",
+    "tab": "body",
+    "kind": "number",
+    "unit": "mmol/L",
+    "step": 0.1,
+    "target": null,
+    "accent": "progress",
+    "healthMetricKey": "bloodGlucoseMmolL",
+    "healthMetricLabel": "Blood glucose",
+    "entries": [
+      { "date": "2026-04-15", "value": 5.4, "source": "synced" },
+      { "date": "2026-04-14", "value": 6.1, "source": "manual" }
+    ]
+  }
+]
+```
+
+<ResponseField name="id" type="string">
+  Identifier for the metric. Every other custom-metric route takes it in the path.
+</ResponseField>
+
+<ResponseField name="kind" type="string">
+  How the app draws it: `counter` for whole things tallied through the day, `number` for a figure typed once, `toggle` for did-it-or-not.
+</ResponseField>
+
+<ResponseField name="healthMetricKey" type="string | null">
+  The catalogue signal this metric is bound to, or `null` when the user types it in.
+</ResponseField>
+
+<ResponseField name="entries[].source" type="string">
+  `"manual"` for a value someone typed, `"synced"` for one the health sync wrote.
+</ResponseField>
+
+---
+
+## GET /v1/health/metrics: The bindable catalogue
+
+Returns the Apple Health and Health Connect signals a custom metric can be bound to, with each one's key, label, unit, aggregation, HealthKit identifier, Health Connect record, plausible range, and a `gap` note where one platform cannot supply it.
+
+**Read this before creating a metric with a `healthMetricKey`.** A key the catalogue does not know is rejected on the way in, so guessing costs you a `400`.
+
+### Query parameters
+
+<ParamField query="group" type="string">
+  Narrow to one category: `activity`, `vitals`, `body`, `nutrition`, `sleep`, `reproductive`, or `mindfulness`.
+</ParamField>
+
+<ParamField query="all" type="boolean">
+  Pass `true` to include the metrics OneRep already scores on and draws its own screens for. Those cannot be bound; by default they are left out.
+</ParamField>
+
+**Example request**
+
+```bash
+curl -s "https://<deployment>.convex.site/v1/health/metrics?group=vitals" \
+  -H "Authorization: Bearer onerep_sk_…" | jq
+```
+
+**Example response**
+
+```json
+[
+  {
+    "key": "bloodGlucoseMmolL",
+    "label": "Blood glucose",
+    "detail": "Finger-prick or continuous monitor readings",
+    "group": "vitals",
+    "unit": "mmol/L",
+    "aggregation": "average",
+    "apple": "bloodGlucose",
+    "google": "BloodGlucose",
+    "gap": null,
+    "min": 1,
+    "max": 40,
+    "bindable": true
+  }
+]
+```
+
+<ResponseField name="gap" type="string | null">
+  Why one platform cannot supply this metric, or `null` when both can.
+</ResponseField>
+
+<ResponseField name="bindable" type="boolean">
+  `false` for the metrics OneRep scores on itself, which only appear when you pass `all=true`.
+</ResponseField>
+
+<Note>
+  This route reads a constant, not your log. It is the same list documented on [Health metrics by platform](/features/health-metrics), and the same caveat applies: the 25 most recently catalogued signals are bindable but not yet readable from a phone.
+</Note>
