@@ -1,10 +1,10 @@
 ---
-title: "Complete MCP Tool Reference for OneRep: All 22 Tools"
+title: "Complete MCP Tool Reference for OneRep: All 23 Tools"
 sidebarTitle: "Tools"
-description: "Complete reference for all 22 OneRep MCP tools: 8 read tools for querying your log, 7 write tools for adding entries, and 7 delete tools for removing them."
+description: "Complete reference for all 23 OneRep MCP tools: 8 read tools for querying your log, 8 write tools for adding and correcting entries, and 7 delete tools for removing them."
 ---
 
-OneRep exposes 22 tools over MCP. They are deliberately coarse, so an assistant can describe your training and nutrition without burning its context window on dozens of thin wrappers. Each tool belongs to exactly one scope, and a token is only shown the tools its scopes cover. A read-only token will not list or accept a write or delete tool call.
+OneRep exposes 23 tools over MCP. They are deliberately coarse, so an assistant can describe your training and nutrition without burning its context window on dozens of thin wrappers. Each tool belongs to exactly one scope, and a token is only shown the tools its scopes cover. A read-only token will not list or accept a write or delete tool call.
 
 ## Read tools (scope: `read`)
 
@@ -71,6 +71,7 @@ Returns sleep, steps, resting heart rate, HRV, and active energy per day between
 **Key notes:**
 - Both `start` and `end` are required and inclusive
 - HRV is SDNN on Apple and RMSSD on Health Connect. Never compare the two figures; compare a person against their own baseline
+- Each day carries `manualFields`, the list of fields the user corrected by hand. Those are pinned: the phone no longer overwrites them, and neither should you without being asked
 
 ---
 
@@ -85,7 +86,7 @@ Returns sessions read out of the platform health store (runs, rides, swims, and 
 
 ## Write tools (scope: `write`)
 
-These seven tools require the `write` scope. They are not listed to, or callable by, a read-only token.
+These eight tools require the `write` scope. They are not listed to, or callable by, a read-only token.
 
 ### `log_water`
 
@@ -149,6 +150,20 @@ Writes or corrects any part of a day's check-in: weight, body fat, any of the se
 - Passing no fields at all is refused rather than treated as an empty write
 - Correcting a day marked `"health"` flips it to `"manual"`, so a later phone sync stops overwriting it
 - Undoable from the app, and the undo restores the previous values of exactly the fields the call touched
+
+---
+
+### `set_health_metric`
+
+Pins one field of one day to a figure the user gives you, and keeps the phone from overwriting it on the next sync. This is the tool for "my watch was on the charger, I actually slept seven hours".
+
+**Key notes:**
+- `field` is one of `sleepMinutes`, `steps`, `restingHeartRateBpm`, `hrvMs`, or `activeEnergyKcal`
+- `value: null` releases the field. The override is dropped and the next sync restores whatever the health store says
+- Values outside the plausible range for the metric are **rejected, not clamped**. A slipped decimal point should fail loudly rather than settle into a baseline
+- Overrides are per field, so pinning a resting heart rate leaves that day's steps syncing normally
+- The call returns the day's full `manualFields` list, so you can see what else is pinned
+- Undoable from the app
 
 ---
 

@@ -342,6 +342,41 @@ curl -s https://<deployment>.convex.site/v1/workouts \
 
 ---
 
+## POST /v1/health/days/{date}: Correct a day's health reading
+
+Pins one field of one day's synced health readings to a figure you supply, and stops the phone overwriting it on the next sync. The date goes in the path; the field and its value go in the body.
+
+### Request body
+
+<ParamField body="field" type="string" required>
+  Which reading to correct. One of `sleepMinutes`, `steps`, `restingHeartRateBpm`, `hrvMs`, or `activeEnergyKcal`.
+</ParamField>
+
+<ParamField body="value" type="number | null" required>
+  The corrected reading, in the metric's stored unit. Pass `null` to release the field, after which the next device sync owns it again.
+</ParamField>
+
+**Example request**
+
+```bash
+curl -s https://<deployment>.convex.site/v1/health/days/2026-04-15 \
+  -H "Authorization: Bearer onerep_sk_…" \
+  -H "Content-Type: application/json" \
+  -d '{"field": "sleepMinutes", "value": 420}' | jq
+```
+
+The response returns the day's full list of pinned fields, which `GET /v1/health/days` also reports per day as `manualFields`.
+
+<Warning>
+  Values outside the plausible range for the metric are **rejected with a `400`, not clamped**. A slipped decimal point or a unit mix-up should fail rather than settle into a baseline as a plausible-looking number.
+</Warning>
+
+<Note>
+  Overrides are per field. Correcting a resting heart rate leaves the same day's step count syncing normally.
+</Note>
+
+---
+
 ## POST /v1/rest-days: Mark dates as rest days
 
 Marks one or more calendar dates as planned rest days. You can submit up to 31 dates in a single request, which makes it easy to pre-schedule a full month at once.

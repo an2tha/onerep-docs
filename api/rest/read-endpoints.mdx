@@ -481,3 +481,49 @@ Every field a check-in can hold is returned, not just the ones the charts plot. 
 <ResponseField name="notes" type="string">
   The journal note attached to this check-in, if any.
 </ResponseField>
+
+---
+
+## GET /v1/health/days: Synced daily health readings
+
+Returns the sleep, steps, resting heart rate, HRV, and active energy stored for each day between `start` and `end` (both required, both inclusive), as synced from Apple Health or Health Connect.
+
+**Example request**
+
+```bash
+curl -s "https://<deployment>.convex.site/v1/health/days?start=2026-04-08&end=2026-04-15" \
+  -H "Authorization: Bearer onerep_sk_…" | jq
+```
+
+**Example response**
+
+```json
+{
+  "start": "2026-04-08",
+  "end": "2026-04-15",
+  "days": [
+    {
+      "date": "2026-04-15",
+      "provider": "apple_health",
+      "sleepMinutes": 420,
+      "steps": 9184,
+      "restingHeartRateBpm": 52,
+      "hrvMs": 61,
+      "activeEnergyKcal": 640,
+      "manualFields": ["sleepMinutes"]
+    }
+  ]
+}
+```
+
+<ResponseField name="provider" type="string">
+  Where the day came from: `"apple_health"`, `"health_connect"`, or `"manual"` for a day that only ever held a typed correction.
+</ResponseField>
+
+<ResponseField name="manualFields" type="string[]">
+  Fields on this day the user corrected by hand. Those values are pinned: the phone no longer overwrites them, and `POST /v1/health/days/{date}` with `value: null` is what releases one.
+</ResponseField>
+
+<Warning>
+  HRV is SDNN on Apple Health and RMSSD on Health Connect. The two are different statistics. Compare a person against their own baseline and never against a figure from the other platform.
+</Warning>

@@ -76,7 +76,7 @@ Every key carries a scope that determines which routes it can call.
 | Scope | What it allows |
 |-------|----------------|
 | **Read only** | All `GET` routes: days, workouts, measurements, health readings, goals, insights |
-| **Read & write** | All `GET` routes **plus** all `POST` routes: logging food, water, weight, check-ins, workouts, and rest days |
+| **Read & write** | All `GET` routes **plus** all `POST` routes: logging food, water, weight, check-ins, workouts, rest days, and correcting a day's health readings |
 | **Full access** | Everything above **plus** the `DELETE` routes: removing entries, sessions, check-ins, and days of health readings |
 
 Read-only enforcement is strict: a `POST` route called with a read-only key returns `403 insufficient_scope` immediately, before any work happens. There is no way to persuade a read-only key to write.

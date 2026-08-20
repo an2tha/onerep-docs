@@ -6,11 +6,11 @@ description: "Every health signal OneRep can read, how Apple Health and Health C
 
 Apple Health and Health Connect disagree more than their marketing suggests. This page lists all 43 signals OneRep understands, what each store calls it, and what happens on the platform that does not have it.
 
-Metrics marked with an asterisk are the ones OneRep scores on and draws its own screens for. Everything else can be bound to a [custom progress metric](/features/progress): a custom metric carries an optional health metric key, and the sync fills that metric in from your phone. This is how blood glucose or blood pressure gets tracked without the app pretending to have an opinion about what a good reading is.
+Metrics marked with an asterisk are the ones OneRep scores on and draws its own screens for. Everything else you reach by creating a [custom progress metric](/features/progress) and choosing **Fill from Apple Health** (or Health Connect) when you make it. The sync then fills that metric in every day. This is how blood glucose gets tracked without the app pretending to have an opinion about what a good reading is.
 
 ## How to read these tables
 
-- **Apple Health** names the HealthKit identifier, without the `HKQuantityTypeIdentifier` prefix.
+- **Apple Health** names the HealthKit identifier, without the `HKQuantityTypeIdentifier` prefix. HealthKit capitalises the VO2 max acronym and nothing else, so `VO2Max` is correct and not a typo.
 - **Health Connect** names the record class, without the `Record` suffix.
 - **Aggregation** is how a day's readings collapse into one number. `Sum` for things that accumulate, `Average` for sampled signals where no single reading is more true than another, `Latest` for point measurements you take, `Sessions` for things with a start and an end.
 - **Plausible range** is a filter, not a target. A reading outside it is dropped on its own; the rest of the day survives. A health store aggregates every app on your phone, and one badly behaved writer must not be able to poison a baseline.
@@ -33,7 +33,7 @@ A dash means that platform has no equivalent type. Where that happens, the note 
 | Floors climbed | `flightsClimbed` | `FloorsClimbed` | floors | Sum | 0–1000 |
 | Elevation gained | — | `ElevationGained` | m | Sum | 0–20000 |
 | Wheelchair pushes | `pushCount` | `WheelchairPushes` | pushes | Sum | 0–100000 |
-| VO2 max | `vo2Max` | `Vo2Max` | mL/kg/min | Latest | 5–100 |
+| VO2 max | `VO2Max` | `Vo2Max` | mL/kg/min | Latest | 5–100 |
 | Cycling cadence | `cyclingCadence` | `CyclingPedalingCadence` | rpm | Average | 1–250 |
 | Power | `cyclingPower` | `Power` | W | Average | 1–2500 |
 | Speed | `runningSpeed` | `Speed` | m/s | Average | 0–50 |
@@ -132,6 +132,16 @@ A dash means that platform has no equivalent type. Where that happens, the note 
 
 **Nutrition.** Health Connect files calories, protein, carbohydrates, and caffeine under a single `Nutrition` record. Reading these is useful when another app owns your food logging; if you log food in OneRep, you already have better numbers.
 
+## What each platform can read and write
+
+The native plugins read 39 of these metrics on iOS and 37 on Android. The gap is the platform gaps in the tables above, not a shortfall in the app.
+
+Write-back is narrower: 34 metrics on iOS and 22 on Android. Nutrition, blood pressure, sleep, and the reproductive records refuse write-back on Android for structural reasons. A nutrition record needs a meal to hang off, blood pressure is a single record holding two numbers so half of it cannot be corrected on its own, and the sleep and reproductive records carry structure that one number cannot reconstruct.
+
+<Warning>
+  Neither Apple Health nor Health Connect lets an app amend a sample another app wrote. A write-back is **added alongside** the original, so the store then shows two readings for that day: yours and the device's. OneRep uses your corrected figure either way. See [Health](/features/health) for the switch that controls this.
+</Warning>
+
 ## Turning them on
 
-Nothing here is read until you turn on sync, and the ten first-class metrics each have their own switch in **Settings → Health & wearables**. See [Health](/features/health) for the switch list and what a metric being off actually means. The rest arrive only when a custom metric is bound to them.
+Nothing here is read until you turn on sync, and the ten first-class metrics each have their own switch in **Settings → Health & wearables**. See [Health](/features/health) for the switch list and what a metric being off actually means. The rest arrive only once a custom metric is bound to them.

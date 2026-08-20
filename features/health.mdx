@@ -24,7 +24,9 @@ Under the dials, a short summary explains what moved, followed by **How to move 
 
 ### Choosing which dials appear
 
-Tap the sliders icon in the Health header to open **Dials** and switch areas on or off. This is purely about what you want to look at: switching off the Sleep dial does not stop sleep syncing, and its charts stay in Trends either way.
+The Health header carries two buttons: the sliders icon opens **Dials**, and the pencil opens [Correct a reading](#correcting-a-reading).
+
+Tap the sliders icon to open **Dials** and switch areas on or off. This is purely about what you want to look at: switching off the Sleep dial does not stop sleep syncing, and its charts stay in Trends either way.
 
 Dial choice is stored on your account, so it follows you across devices. Fewer dials also means bigger ones; the ring size falls out of how many you show rather than being fixed.
 
@@ -47,6 +49,53 @@ Change is measured against your first reading in the log, not yesterday's. A day
 <Tip>
   Smart-scale body fat percentages come from electrical impedance. Treat a move from 22 to 20 as real and the 20 itself as approximate.
 </Tip>
+
+## Correcting a reading
+
+A watch left on the charger produces a day that is wrong rather than missing, and every number on this page is a composite: one night recorded as two hours of sleep drags a fortnight of recovery down with it. The pencil in the Health header opens **Correct a reading** so you can say so.
+
+The sheet steps back through the last seven days, one at a time. Beyond a week you are guessing rather than correcting, so it stops there. Each day offers sleep, steps, resting heart rate, heart rate variability, active energy, weight, and body fat, and every row is labelled with where its number came from: **read from Apple Health**, **you typed this**, or **nothing recorded**.
+
+<Steps>
+  <Step title="Pick the day">
+    Use the arrows either side of the date. Today is the default and the furthest forward you can go.
+  </Step>
+  <Step title="Type the right number">
+    Enter what the reading should have been. Sleep is typed in hours even though it is stored in minutes, and weight follows your unit preference.
+  </Step>
+  <Step title="Save">
+    Whatever you typed is what every score on the page now uses.
+  </Step>
+</Steps>
+
+Corrections are recorded per field, not per day. Fixing a bogus resting heart rate leaves that day's step count synced and still updating, so one bad sensor does not freeze everything the phone recorded alongside it.
+
+To hand a field back, tap **Use synced** on its row, or clear the box and save. The override is dropped and the next sync owns the field again, restoring whatever the health store actually says.
+
+<Note>
+  Values outside the plausible range for their metric are refused, not rounded to the nearest legal figure. A slipped decimal point should look like an error rather than settle quietly into your baseline. The message names the range.
+</Note>
+
+### Pushing corrections back to your phone
+
+The sheet carries an **Also update Apple Health** switch (Health Connect on Android). It is off by default, and it only changes what other apps see: OneRep uses your corrected figure whether or not you turn it on.
+
+<Warning>
+  **Your phone will show two readings for that day.** Neither Apple Health nor Health Connect lets one app amend a sample another app wrote. A correction is added next to the original rather than replacing it, so the health store ends up holding both your figure and the device's. This is a limit of the platforms, not something OneRep can work around, which is why the switch is off until you ask for it.
+</Warning>
+
+If your phone refuses the write, because you declined write permission or the record type cannot be written at all, the correction still stands inside OneRep. A refused write-back is never a reason to lose the edit.
+
+## Filling a custom metric from your phone
+
+Custom progress metrics can read themselves off your phone. When you create one in Progress, tap **Fill from Apple Health** and pick a catalogue entry: blood glucose, blood pressure, caffeine, VO2 max, and everything else the two stores expose beyond the ten OneRep scores on.
+
+- The unit comes from the catalogue rather than from your description, because the unit the sync writes in is not negotiable
+- Metrics your phone cannot deliver stay on the list, greyed, wearing the reason. "Your platform has no record for this" is a better answer than a metric that quietly is not there
+- Typing a value yourself marks that day as yours, and the sync stops overwriting it
+- **Type it myself** at the top of the list is the way back to an ordinary manual metric
+
+A bound metric shows **Read from Apple Health** under its title in Progress. See [Progress](/features/progress) for the rest of the metric builder.
 
 ## Choosing what OneRep may read
 
@@ -79,7 +128,7 @@ Switches are stored per metric on your account. A metric added in a later releas
   The switches are inert until sync itself is on. Each row says **Turn on Apple Health sync first** (or Health Connect, on Android) rather than moving and doing nothing.
 </Note>
 
-For the full catalogue of what each platform exposes, including the metrics you can bind a custom metric to, see [Health metrics by platform](/features/health-metrics).
+For the full catalogue of what each platform exposes, and the metrics you can point a custom metric at, see [Health metrics by platform](/features/health-metrics).
 
 ## Body composition sync
 
