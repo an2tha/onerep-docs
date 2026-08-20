@@ -1,16 +1,16 @@
 ---
 title: "What Is OneRep? Features, Platforms, and the AI Coach"
 sidebarTitle: "Introduction"
-description: "OneRep combines training, nutrition, recovery, and progress tracking in one app — with an AI Coach that logs, plans, and remembers so you don't have to."
+description: "OneRep combines training, nutrition, recovery, and progress tracking in one app, with an AI Coach that logs, plans, and remembers so you don't have to."
 ---
 
-OneRep is a fitness app that keeps training, nutrition, recovery, and progress in one place. Instead of juggling separate apps for food logging, workout tracking, and coach check-ins, everything lives in a single dashboard that updates in real time across all your devices. An AI Coach handles the bookkeeping — logging meals from photos, adjusting workout plans, writing weekly reviews — so you can focus on actually training.
+OneRep is a fitness app that keeps training, nutrition, recovery, and progress in one place. Instead of juggling separate apps for food logging, workout tracking, and coach check-ins, everything lives in a single dashboard that updates in real time across all your devices. An AI Coach handles the bookkeeping: it logs meals from photos, adjusts workout plans, and writes weekly reviews.
 
 ## What OneRep tracks
 
 <CardGroup cols={2}>
   <Card title="Daily Dashboard" icon="gauge">
-    Calorie and macro rings, water intake, supplements, scheduled training, Coach goals, and configurable widgets — everything you need to see at a glance each day.
+    Calorie and macro rings, water intake, supplements, scheduled training, Coach goals, and configurable widgets.
   </Card>
   <Card title="Nutrition" icon="fork-knife">
     Food search across USDA FoodData Central and Open Food Facts, barcode scanning, meal presets, recipes, quick repeat logging, and custom macro targets.
@@ -19,10 +19,10 @@ OneRep is a fitness app that keeps training, nutrition, recovery, and progress i
     An exercise catalog, workout templates, weekly routines, two concurrent workout slots, rest timers, persisted active workouts, history, volume trends, and muscle-recovery estimates.
   </Card>
   <Card title="Progress" icon="chart-line">
-    Body measurements, body-fat and circumference check-ins, nutrition and training summaries, charts, and user-defined metrics to track whatever matters to you.
+    Body measurements, body-fat and circumference check-ins, nutrition and training summaries, charts, and user-defined metrics.
   </Card>
   <Card title="AI Coach" icon="brain">
-    Text, image, and voice input. Personalized briefings, recipe and meal logging, workout and weekly-plan changes, goals, check-ins, memory, and reversible operations — every AI write carries an undo payload.
+    Text, image, and voice input. Personalized briefings, recipe and meal logging, workout and weekly-plan changes, goals, check-ins, memory, and reversible operations. Every AI write carries an undo payload.
   </Card>
   <Card title="REST API & MCP" icon="code">
     A REST API and an MCP endpoint secured by keys you mint in the app, so your own scripts and AI assistants can read the same log you do.
@@ -33,13 +33,13 @@ OneRep is a fitness app that keeps training, nutrition, recovery, and progress i
 
 OneRep is one React codebase that ships in four forms. Your data syncs in real time across all of them.
 
-- **Web app** — runs in any modern browser at [app.onerep.life](https://app.onerep.life)
-- **PWA** — install directly from your browser for a full-screen, offline-capable experience on any device
-- **iOS** — native app built with Capacitor
-- **Android** — native app built with Capacitor
+- **Web app**: runs in any modern browser at [app.onerep.life](https://app.onerep.life)
+- **PWA**: install directly from your browser for a full-screen, offline-capable experience on any device
+- **iOS**: native app built with Capacitor
+- **Android**: native app built with Capacitor
 
 <Tip>
-  On iOS, open OneRep in Safari, tap **Share**, then **Add to Home Screen** to install the PWA in seconds — no App Store needed.
+  On iOS, open OneRep in Safari, tap **Share**, then **Add to Home Screen** to install the PWA. No App Store needed.
 </Tip>
 
 ## Photo logging
@@ -48,15 +48,15 @@ Point your camera at a meal and the Coach identifies what's on the plate, matche
 
 ## Bring your own AI key
 
-If you'd rather run AI features on your own OpenRouter API key, paste it in **Settings → Account**. OneRep validates the key before saving it, stores it server-side only, and exempts it from any monthly usage cap — you're paying OpenRouter directly for what you use.
+If you'd rather run AI features on your own OpenRouter API key, paste it in **Settings → Account**. OneRep validates the key before saving it, stores it server-side only, and exempts it from any monthly usage cap. You're paying OpenRouter directly for what you use.
 
-## Your data, your way
+## Data export and deletion
 
 OneRep supports full data export from **Settings → Data & account**, and account deletion is available at any time in the same section. Analytics are opt-in and off by default.
 
 ## Self-hosting
 
-The entire stack — backend, food database, and app — can run on your own hardware with a single install script. Self-hosted installs have no plans, no paywall, and no monthly AI cap.
+The entire stack (backend, food database, and app) can run on your own hardware with a single install script. Self-hosted installs have no plans, no paywall, and no monthly AI cap.
 
 <Note>
   Self-hosting documentation covers the install process, food database setup, and optional integrations such as email, Google sign-in, and OIDC providers.

@@ -1,10 +1,10 @@
 ---
 title: "OneRep OAuth: Connect AI Assistants Without API Keys"
 sidebarTitle: "OAuth"
-description: "Authorize an MCP-compatible AI assistant like Claude Desktop to access your OneRep data through a browser-based consent flow — no keys to copy."
+description: "Authorize an MCP-compatible AI assistant like Claude Desktop to access your OneRep data through a browser-based consent flow, with no keys to copy."
 ---
 
-Some AI assistants — Claude Desktop's custom connectors, for example — prefer to request access through a standard authorization flow rather than accept a pasted key. OneRep supports this: you give the assistant your MCP endpoint URL, it handles everything else in the background, and you confirm access on a consent screen. No keys to copy, no configuration to manage.
+Some AI assistants, such as Claude Desktop's custom connectors, prefer to request access through a standard authorization flow rather than accept a pasted key. OneRep supports this: you give the assistant your MCP endpoint URL, it handles everything else in the background, and you confirm access on a consent screen. No keys to copy, no configuration to manage.
 
 ## Connecting an assistant via OAuth
 
@@ -13,7 +13,7 @@ Some AI assistants — Claude Desktop's custom connectors, for example — prefe
     Open OneRep and go to **Settings → API & MCP**. Copy your MCP endpoint URL from there.
   </Step>
   <Step title="Paste the URL into your assistant">
-    In your AI assistant's settings, add a new connection and paste your OneRep MCP endpoint URL. The exact label varies by client — look for something like "Custom connector URL" or "MCP server URL."
+    In your AI assistant's settings, add a new connection and paste your OneRep MCP endpoint URL. The exact label varies by client, so look for something like "Custom connector URL" or "MCP server URL."
   </Step>
   <Step title="Approve the consent screen">
     The assistant opens a browser tab showing a consent screen with OneRep's name and the permissions being requested. Review what access is being granted, then approve it.
@@ -29,14 +29,14 @@ To disconnect an assistant at any time, go to **Settings → API & MCP → Conne
 
 ## Token lifetime
 
-OAuth access tokens are valid for **7 days**. Your assistant renews them automatically in the background — you do not need to re-authorize. Refresh tokens are valid for **90 days** and rotate on every use, so a compromised refresh token can only be used once before it stops working.
+OAuth access tokens are valid for **7 days**. Your assistant renews them automatically in the background, so you do not need to re-authorize. Refresh tokens are valid for **90 days** and rotate on every use, so a compromised refresh token can only be used once before it stops working.
 
 ## If your assistant asks for a Client ID and Secret
 
 Some older or more manual clients cannot register themselves automatically and will ask you to provide a Client ID and Client Secret instead.
 
 <Note>
-To generate these credentials, go to **Settings → API & MCP → New OAuth client**, paste the redirect URI shown by your assistant, and create the client. Copy the Client ID and Secret back into your assistant. The secret is shown **once** and cannot be retrieved afterwards — store it securely or generate a new one if you lose it.
+To generate these credentials, go to **Settings → API & MCP → New OAuth client**, paste the redirect URI shown by your assistant, and create the client. Copy the Client ID and Secret back into your assistant. The secret is shown **once** and cannot be retrieved afterwards, so store it securely or generate a new one if you lose it.
 </Note>
 
 ## Security
@@ -45,4 +45,4 @@ To generate these credentials, go to **Settings → API & MCP → New OAuth clie
 An OAuth access token grants the same level of access to your data as an API key with the same scope. Treat any connected app with the same care you would a password. If you did not initiate a connection, or if you no longer use an assistant, revoke its access immediately from **Settings → API & MCP → Connected apps**.
 </Warning>
 
-An OAuth token carries the same scopes and rate limits as an API key. The difference is that it expires, rotates automatically, and appears under your connected apps list rather than your key list — making it easy to see exactly which assistants have access and to revoke any of them with one tap.
+An OAuth token carries the same scopes and rate limits as an API key. The difference is that it expires, rotates automatically, and appears under your connected apps list rather than your key list, making it easy to see exactly which assistants have access and to revoke any of them with one tap.

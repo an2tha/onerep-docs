@@ -1,10 +1,10 @@
 ---
-title: "OneRep REST API — Error Handling and HTTP Status Codes"
+title: "OneRep REST API: Error Handling and HTTP Status Codes"
 sidebarTitle: "Errors"
 description: "Error response shape, all status codes and error codes returned by the OneRep REST API, and a troubleshooting guide for common problems."
 ---
 
-Every error response from the OneRep API has the same predictable shape regardless of what went wrong. You can always count on a JSON body with an `error` object containing a `code` and a human-readable `message`. Use the `code` field to drive your error-handling logic — the `message` is written for whoever is reading logs at 2 am and may be reworded in future releases without notice.
+Every error response from the OneRep API has the same predictable shape regardless of what went wrong. You can always count on a JSON body with an `error` object containing a `code` and a human-readable `message`. Use the `code` field to drive your error-handling logic. The `message` is written for whoever is reading logs at 2 am and may be reworded in future releases without notice.
 
 ```json
 {
@@ -29,7 +29,7 @@ The table below covers every status code the API returns, the `code` value you w
 |---|---|---|
 | `400` | `invalid_request` | The request was structurally or semantically wrong. Check the `message` for details on which field or value failed validation. |
 | `400` | `invalid_json` | The request body could not be parsed as JSON. Ensure your body is valid JSON and your `Content-Type` header is `application/json`. |
-| `400` | `unknown_field` | The request body contains a field name the API does not recognise. Check spelling against the endpoint's parameter list — unrecognised fields are never silently ignored. |
+| `400` | `unknown_field` | The request body contains a field name the API does not recognise. Check spelling against the endpoint's parameter list; unrecognised fields are never silently ignored. |
 | `401` | `unauthorized` | The API key is missing, malformed, wrong, or has been revoked. |
 | `403` | `insufficient_scope` | A read-only key attempted a write operation. The route exists, but the key's scope does not permit it. |
 | `404` | `not_found` | The path does not match any route. Call `GET /v1` to see the routes your key can reach. |
@@ -39,7 +39,7 @@ The table below covers every status code the API returns, the `code` value you w
 | `429` | `rate_limited` | You have exhausted your hourly budget (600 reads or 60 writes per hour, per key, in a fixed window). Read the `Retry-After` response header for the number of seconds to wait before retrying. |
 
 <Note>
-  Rate limits are **per key, not per account**. A single runaway script will not lock other keys — or you — out of the API.
+  Rate limits are **per key, not per account**. A single runaway script will not lock other keys, or you, out of the API.
 </Note>
 
 ---
@@ -53,7 +53,7 @@ The table below covers every status code the API returns, the `code` value you w
   -H "Authorization: Bearer onerep_sk_…"
   ```
 
-  Note the space after `Bearer`. If the key was recently revoked in **Settings → API & MCP**, mint a replacement — a revoked key cannot be recovered, since only its hash is stored.
+  Note the space after `Bearer`. If the key was recently revoked in **Settings → API & MCP**, mint a replacement. A revoked key cannot be recovered, since only its hash is stored.
 </Accordion>
 
 <Accordion title="403 on a route that plainly exists">
@@ -61,7 +61,7 @@ The table below covers every status code the API returns, the `code` value you w
 </Accordion>
 
 <Accordion title="400 unknown_field on a body that looks right">
-  Check the field name spelling carefully against the endpoint's parameter table. A single character difference — for example `"protien"` instead of `"protein"` — returns this error instead of logging a zero. The API refuses all fields it will not read, so there are no silent typos.
+  Check the field name spelling carefully against the endpoint's parameter table. A single character difference, for example `"protien"` instead of `"protein"`, returns this error instead of logging a zero. The API refuses all fields it will not read, so there are no silent typos.
 </Accordion>
 
 <Accordion title="Everything reads as empty or missing">
@@ -74,6 +74,6 @@ The table below covers every status code the API returns, the `code` value you w
 
 Not all errors are worth retrying. Follow this pattern to avoid duplicate writes or wasted budget:
 
-- **Retry on `429`** — wait the number of seconds in the `Retry-After` header, then try again.
-- **Retry on `5xx`** — a server-side error may be transient.
-- **Do not retry on `4xx`** (other than `429`) — the request itself is the problem. Retrying an identical `400` or `403` will always produce the same result. Retrying a `POST` on a network timeout risks duplicate entries, because writes are not idempotent.
+- **Retry on `429`**: wait the number of seconds in the `Retry-After` header, then try again.
+- **Retry on `5xx`**: a server-side error may be transient.
+- **Do not retry on `4xx`** (other than `429`). The request itself is the problem. Retrying an identical `400` or `403` will always produce the same result. Retrying a `POST` on a network timeout risks duplicate entries, because writes are not idempotent.

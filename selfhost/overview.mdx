@@ -1,14 +1,14 @@
 ---
 title: "Self-Hosting OneRep: What You Get and What You Need"
 sidebarTitle: "Overview"
-description: "Run your own copy of OneRep on any machine with Docker. No plans, no paywall, and no AI cap — every account on your install is unlimited and unmetered."
+description: "Run your own copy of OneRep on any machine with Docker. No plans, no paywall, and no AI cap. Every account on your install is unlimited and unmetered."
 ---
 
-Self-hosting OneRep means running the entire stack — the Convex backend, the food datasource, and the web app — on hardware you control. One script clones secrets, wires up the backend, and starts every service. When it finishes, you have a fully functional fitness app with no external dependencies beyond the optional integrations you choose to enable.
+Self-hosting OneRep means running the entire stack (the Convex backend, the food datasource, and the web app) on hardware you control. One script clones secrets, wires up the backend, and starts every service. When it finishes, you have a fully functional fitness app with no external dependencies beyond the optional integrations you choose to enable.
 
 ## What you get
 
-Every account on your install is treated as Pro by default: no plans render, no paywall appears, and no monthly AI cap applies. You are the one paying for inference (via your own OpenRouter key), so nothing meters you. AI, food search, email, analytics, and authentication providers each switch on with their own environment variables and stay quiet without them — a deployment without an `OPENROUTER_API_KEY` still works, and any user can supply their own key in Settings to use the Coach on their own credential.
+Every account on your install is treated as Pro by default: no plans render, no paywall appears, and no monthly AI cap applies. You are the one paying for inference (via your own OpenRouter key), so nothing meters you. AI, food search, email, analytics, and authentication providers each switch on with their own environment variables and stay quiet without them. A deployment without an `OPENROUTER_API_KEY` still works, and any user can supply their own key in Settings to use the Coach on their own credential.
 
 ## Services started
 
@@ -25,7 +25,7 @@ To serve on a real domain, set `PUBLIC_HOST` before the first run, or update `CO
 
 <CardGroup cols={2}>
   <Card title="Docker with Compose v2" icon="docker">
-    Runs the backend, dashboard, datasource, and app. Compose v2 is required — the installer uses `docker compose` (space, not hyphen).
+    Runs the backend, dashboard, datasource, and app. Compose v2 is required, because the installer uses `docker compose` (space, not hyphen).
   </Card>
   <Card title="Bun 1.3.4 or newer" icon="box">
     Required on the host to deploy the Convex functions during installation. Node.js 18+ also works as an alternative.
@@ -34,7 +34,7 @@ To serve on a real domain, set `PUBLIC_HOST` before the first run, or update `CO
     The USDA FoodData Central catalog requires roughly 10 GB of disk space. The datasource starts empty and serves whatever you import.
   </Card>
   <Card title="~25 GB disk (USDA + OFF)" icon="hard-drive">
-    Add another ~15 GB if you also import the full Open Food Facts catalog. Partial imports are supported — you can load a slice first.
+    Add another ~15 GB if you also import the full Open Food Facts catalog. Partial imports are supported, so you can load a slice first.
   </Card>
 </CardGroup>
 
@@ -46,7 +46,7 @@ To serve on a real domain, set `PUBLIC_HOST` before the first run, or update `CO
 
 The installer brings up four containers, all defined in `selfhost/docker-compose.yml`:
 
-- **Convex backend** — database, realtime sync, authentication, scheduled work, and every server-side integration.
-- **Convex dashboard** — the admin UI at `http://127.0.0.1:6791` where you inspect data, run queries, and manage environment variables.
-- **Datasource** — the self-hosted food and exercise API (Bun + SQLite), serving USDA, Open Food Facts, and wger data from whatever you've imported.
-- **App** — a production build of the React web app, served at `http://127.0.0.1:8081`.
+- **Convex backend**: database, realtime sync, authentication, scheduled work, and every server-side integration.
+- **Convex dashboard**: the admin UI at `http://127.0.0.1:6791` where you inspect data, run queries, and manage environment variables.
+- **Datasource**: the self-hosted food and exercise API (Bun + SQLite), serving USDA, Open Food Facts, and wger data from whatever you've imported.
+- **App**: a production build of the React web app, served at `http://127.0.0.1:8081`.

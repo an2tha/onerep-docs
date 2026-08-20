@@ -1,13 +1,13 @@
 ---
-title: "OneRep REST API — Read Endpoints Complete Reference"
+title: "OneRep REST API: Read Endpoints Reference"
 sidebarTitle: "Read Endpoints"
 description: "All GET endpoints available to read-scoped API keys: route list, key info, goals, insights, per-day logs, date ranges, workouts, and measurements."
 ---
 
-The read endpoints let you pull everything OneRep has logged — nutrition totals, workout sessions, body measurements, goals, and computed insights — using any key that carries the `read` scope. Every response is JSON and every date parameter follows the `YYYY-MM-DD` format.
+The read endpoints let you pull everything OneRep has logged (nutrition totals, workout sessions, body measurements, goals, and computed insights) using any key that carries the `read` scope. Every response is JSON and every date parameter follows the `YYYY-MM-DD` format.
 
 <Note>
-  Dates default to **today in UTC**. If you know the user's timezone, always pass an explicit date when calling near midnight — otherwise you may silently query the wrong calendar day.
+  Dates default to **today in UTC**. If you know the user's timezone, always pass an explicit date when calling near midnight. Otherwise you may silently query the wrong calendar day.
 </Note>
 
 <Tip>
@@ -16,7 +16,7 @@ The read endpoints let you pull everything OneRep has logged — nutrition total
 
 ---
 
-## GET /v1 — Route list
+## GET /v1: Route list
 
 Returns the full list of routes available to your key, filtered by its scopes. This is the fastest way to confirm which endpoints your key can actually reach without consulting this page.
 
@@ -44,7 +44,7 @@ curl -s https://<deployment>.convex.site/v1 \
 
 ---
 
-## GET /v1/me — Key scopes and budget
+## GET /v1/me: Key scopes and budget
 
 Returns the scopes attached to the current key and its hourly rate-limit budget. Use this to verify a key is alive and to check what it is allowed to do before making other calls.
 
@@ -81,7 +81,7 @@ curl -s https://<deployment>.convex.site/v1/me \
 
 ---
 
-## GET /v1/goals — Calorie and macro targets
+## GET /v1/goals: Calorie and macro targets
 
 Returns your configured nutrition targets, daily water goal, preferred weight unit, and stated training goal. These values are set inside the app and are read-only through the API.
 
@@ -136,7 +136,7 @@ curl -s https://<deployment>.convex.site/v1/goals \
 
 ---
 
-## GET /v1/insights — Progression verdicts and monthly summaries
+## GET /v1/insights: Progression verdicts and monthly summaries
 
 Returns computed analysis across your log history: per-lift progression verdicts, recovery status compared to your baseline, and up to six monthly summaries. You can anchor all analysis windows to a specific date with the optional `?date=` query parameter.
 
@@ -189,7 +189,7 @@ curl -s "https://<deployment>.convex.site/v1/insights?date=2026-04-15" \
 
 ---
 
-## GET /v1/days/{date} — Everything logged on one date
+## GET /v1/days/{date}: Everything logged on one date
 
 Returns the complete nutrition log, water intake, workout sessions, and body measurements recorded on a single calendar day. The `{date}` path parameter must be in `YYYY-MM-DD` format and defaults to today in UTC when omitted.
 
@@ -258,9 +258,9 @@ curl -s https://<deployment>.convex.site/v1/days/2026-04-15 \
 
 ---
 
-## GET /v1/days — Per-day totals over a date range
+## GET /v1/days: Per-day totals over a date range
 
-Returns daily nutrition, water, and measurement totals for every calendar day between `?start=` and `?end=` (inclusive). Both parameters are required. This is more efficient than calling `GET /v1/days/{date}` repeatedly — the entire range counts as one budget unit.
+Returns daily nutrition, water, and measurement totals for every calendar day between `?start=` and `?end=` (inclusive). Both parameters are required. This is more efficient than calling `GET /v1/days/{date}` repeatedly: the entire range counts as one budget unit.
 
 ### Query parameters
 
@@ -334,7 +334,7 @@ curl -s "https://<deployment>.convex.site/v1/days?start=2026-04-09&end=2026-04-1
 
 ---
 
-## GET /v1/workouts — Recent workout sessions
+## GET /v1/workouts: Recent workout sessions
 
 Returns your most recent workout sessions, sorted newest first. Use the optional `?limit=` parameter to control how many sessions are returned, up to a maximum of 50.
 
@@ -396,7 +396,7 @@ curl -s "https://<deployment>.convex.site/v1/workouts?limit=5" \
 
 ---
 
-## GET /v1/measurements — Recent weigh-ins and measurements
+## GET /v1/measurements: Recent weigh-ins and measurements
 
 Returns your most recent body measurements and weigh-ins, sorted newest first. Use the optional `?limit=` parameter to control how many records are returned, up to a maximum of 100.
 

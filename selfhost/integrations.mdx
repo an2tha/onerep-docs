@@ -4,7 +4,7 @@ sidebarTitle: "Integrations"
 description: "Enable AI coaching, email, Google sign-in, OIDC, and analytics by setting backend environment variables. Every integration stays off without its variables."
 ---
 
-Every integration in OneRep is strictly opt-in. Features stay quiet without their variables — a fresh install with no extras configured is a fully usable fitness app. When you are ready to add a capability, set the relevant variables on your Convex backend from the repository root:
+Every integration in OneRep is strictly opt-in. Features stay quiet without their variables: a fresh install with no extras configured is a fully usable fitness app. When you are ready to add a capability, set the relevant variables on your Convex backend from the repository root:
 
 ```sh
 bunx convex env set NAME VALUE
@@ -15,7 +15,7 @@ None of these variables are ever exposed to the client bundle. They live server-
 <Accordion title="AI Coach & Photo Logging">
   The AI Coach handles text, image, and voice input; generates personalized briefings and recipes; makes reversible changes to workouts and nutrition; and drives the photo food-logging flow that detects food in an image and matches detections to database records before logging anything.
 
-  Without an API key, the Coach is absent from the UI. Users can also supply their own OpenRouter key in Settings, which bypasses the deployment's key entirely — they pay for their own inference and are not subject to any cap.
+  Without an API key, the Coach is absent from the UI. Users can also supply their own OpenRouter key in Settings, which bypasses the deployment's key entirely. They pay for their own inference and are not subject to any cap.
 
   **Variables to set:**
 
@@ -30,12 +30,12 @@ None of these variables are ever exposed to the client bundle. They live server-
   ```
 
   <Tip>
-    Exporting `OPENROUTER_API_KEY` in your shell before running `./install.sh` is the easiest path — the installer reads it and sets the backend variable for you.
+    Exporting `OPENROUTER_API_KEY` in your shell before running `./install.sh` is the easiest path: the installer reads it and sets the backend variable for you.
   </Tip>
 </Accordion>
 
 <Accordion title="Food Search & Barcodes">
-  Food search and barcode scanning are powered by the self-hosted datasource container that the installer brings up. The two variables that connect Convex to the datasource are set automatically by the installer — you do not need to configure these manually.
+  Food search and barcode scanning are powered by the self-hosted datasource container that the installer brings up. The two variables that connect Convex to the datasource are set automatically by the installer, so you do not need to configure these manually.
 
   | Variable | Purpose |
   | --- | --- |
@@ -63,7 +63,7 @@ None of these variables are ever exposed to the client bundle. They live server-
   ```
 
   <Note>
-    A mail-less install is fully functional — it is simply one where nobody can reset a forgotten password. Enable email before users rely on the install for anything important.
+    A mail-less install is fully functional; it is simply one where nobody can reset a forgotten password. Enable email before users rely on the install for anything important.
   </Note>
 </Accordion>
 
@@ -82,7 +82,7 @@ None of these variables are ever exposed to the client bundle. They live server-
   bunx convex env set GOOGLE_CLIENT_SECRET GOCSPX-...
   ```
 
-  When creating the OAuth client in Google Cloud Console, add the following as an authorised redirect URI — replacing the origin with your actual site origin:
+  When creating the OAuth client in Google Cloud Console, add the following as an authorised redirect URI, replacing the origin with your actual site origin:
 
   ```
   http://127.0.0.1:3211/api/auth/callback/google
@@ -92,7 +92,7 @@ None of these variables are ever exposed to the client bundle. They live server-
 </Accordion>
 
 <Accordion title="OpenID Connect Sign-In">
-  Adds a single-sign-on button for any OIDC provider that supports standard discovery — Authentik, Keycloak, Pocket ID, and others all work.
+  Adds a single-sign-on button for any OIDC provider that supports standard discovery. Authentik, Keycloak, Pocket ID, and others all work.
 
   **Variables to set:**
 
@@ -110,7 +110,7 @@ None of these variables are ever exposed to the client bundle. They live server-
   bunx convex env set OIDC_PROVIDER_NAME "Sign in with Authentik"
   ```
 
-  Register the following redirect URI with your OIDC provider — your site origin plus `/api/auth/oauth2/callback/oidc`:
+  Register the following redirect URI with your OIDC provider, which is your site origin plus `/api/auth/oauth2/callback/oidc`:
 
   ```
   http://127.0.0.1:3211/api/auth/oauth2/callback/oidc
@@ -118,7 +118,7 @@ None of these variables are ever exposed to the client bundle. They live server-
 </Accordion>
 
 <Accordion title="Telemetry & Analytics">
-  The installer asks about telemetry once during setup. Choosing **no** means no analytics script is included in the built app — there is nothing to block or opt out of. Choosing **yes** (the default) enables Umami-based analytics.
+  The installer asks about telemetry once during setup. Choosing **no** means no analytics script is included in the built app, so there is nothing to block or opt out of. Choosing **yes** (the default) enables Umami-based analytics.
 
   You can point analytics at your own self-hosted Umami instance rather than the project's by setting the Umami pair after installation.
 

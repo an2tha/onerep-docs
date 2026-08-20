@@ -4,7 +4,7 @@ sidebarTitle: "Tools"
 description: "Complete reference for all 11 OneRep MCP tools: 6 read tools for querying your training and nutrition log, and 5 write tools for adding entries."
 ---
 
-OneRep exposes 11 tools over MCP — deliberately coarse, so an assistant can describe your training and nutrition without burning its context window on dozens of thin wrappers. Read tools require a `read`-scoped token; write tools require a `write`-scoped token. A read-only token will not list or accept write tool calls.
+OneRep exposes 11 tools over MCP. They are deliberately coarse, so an assistant can describe your training and nutrition without burning its context window on dozens of thin wrappers. Read tools require a `read`-scoped token; write tools require a `write`-scoped token. A read-only token will not list or accept write tool calls.
 
 ## Read tools (scope: `read`)
 
@@ -23,7 +23,7 @@ Returns everything logged on a single date: all food entries and their nutrition
 
 ### `get_range`
 
-Returns per-day nutrition totals, workouts, and rest-day status between two dates (inclusive). Use this for weekly or monthly summaries — it is far more efficient than calling `get_day` once per day.
+Returns per-day nutrition totals, workouts, and rest-day status between two dates (inclusive). Use this for weekly or monthly summaries. It is far more efficient than calling `get_day` once per day.
 
 **Key notes:**
 - Both start and end dates are `YYYY-MM-DD`
@@ -100,7 +100,7 @@ Records a completed workout session, including the exercises performed, sets, re
 **Key notes:**
 - Maximum **20 exercises** per session
 - Maximum **30 sets** per exercise
-- At most **2 sessions** can be logged per calendar day — a third attempt on the same date is refused with an explanation, not silently dropped
+- At most **2 sessions** can be logged per calendar day. A third attempt on the same date is refused with an explanation, not silently dropped
 
 ---
 
@@ -125,7 +125,7 @@ Rate limits apply per token, not per account:
 | Read calls | 600 per hour |
 | Write calls | 60 per hour |
 
-This means one assistant running in a loop cannot lock you out of your own app — other tokens continue to work.
+This means one assistant running in a loop cannot lock you out of your own app; other tokens continue to work.
 
 ### Date handling
 
@@ -139,4 +139,4 @@ All date parameters default to **today in UTC**. If the user is in a timezone th
 
 ### Tool errors
 
-Tool failures are returned as `tools/call` results with `isError: true` and a human-readable message — they are **not** transport-level errors. This means the assistant can read the error message and correct itself (for example, by adjusting a value that was out of range) rather than seeing a failed HTTP request.
+Tool failures are returned as `tools/call` results with `isError: true` and a human-readable message. They are **not** transport-level errors. This means the assistant can read the error message and correct itself (for example, by adjusting a value that was out of range) rather than seeing a failed HTTP request.

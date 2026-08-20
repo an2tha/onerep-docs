@@ -1,10 +1,10 @@
 ---
 title: "OneRep API: REST and Model Context Protocol Overview"
 sidebarTitle: "Overview"
-description: "Access your training and nutrition log over REST or MCP — JSON in, JSON out, same API key, same scopes, and the same rate limits across both surfaces."
+description: "Access your training and nutrition log over REST or MCP: JSON in, JSON out, same API key, same scopes, and the same rate limits across both surfaces."
 ---
 
-OneRep exposes your entire training and nutrition log through a REST API and a Model Context Protocol (MCP) endpoint. You can use either surface to read your history, post new entries, or connect an AI assistant — all with the same API key, the same scopes, and the same rate limits.
+OneRep exposes your entire training and nutrition log through a REST API and a Model Context Protocol (MCP) endpoint. You can use either surface to read your history, post new entries, or connect an AI assistant, all with the same API key, the same scopes, and the same rate limits.
 
 ## Base URL
 
@@ -33,7 +33,7 @@ Every request and response uses JSON. Send `Content-Type: application/json` on a
     Log food, water, weight, workouts, and rest days programmatically.
   </Card>
   <Card title="MCP Endpoint" icon="robot" href="/api/mcp/overview">
-    Connect AI assistants using the Model Context Protocol — same keys, same data.
+    Connect AI assistants using the Model Context Protocol. Same keys, same data.
   </Card>
 </CardGroup>
 
@@ -69,7 +69,7 @@ A healthy response echoes the key's scopes and its remaining hourly budget:
 }
 ```
 
-`GET /v1` returns the full route list filtered to only the routes your key is allowed to call — useful when you are writing a new integration and want a quick reference without leaving your terminal.
+`GET /v1` returns the full route list filtered to only the routes your key is allowed to call, which is useful when you are writing a new integration and want a quick reference without leaving your terminal.
 
 ## Error shape
 

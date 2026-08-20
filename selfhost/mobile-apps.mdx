@@ -4,7 +4,7 @@ sidebarTitle: "Mobile Apps"
 description: "Install OneRep as a PWA with no toolchain, or build native iOS and Android apps with Capacitor and point them at your own backend."
 ---
 
-There is no app store listing to install from. You get your install onto a phone in one of two ways: as a Progressive Web App (no build step required) or as a native app built with Capacitor. Both routes require your backend to be reachable from the phone — which the default `127.0.0.1` address is not.
+There is no app store listing to install from. You get your install onto a phone in one of two ways: as a Progressive Web App (no build step required) or as a native app built with Capacitor. Both routes require your backend to be reachable from the phone, which the default `127.0.0.1` address is not.
 
 <Warning>
   **The default backend address (`127.0.0.1`) is not reachable from a phone.** On a mobile device, `127.0.0.1` refers to the phone itself, not your server. If you build or open the app without changing this, it will install successfully, open, and then fail to sign in with no obvious explanation. Before building for a phone, set `PUBLIC_HOST` before running `./install.sh`, or update `CONVEX_CLOUD_ORIGIN`, `CONVEX_SITE_ORIGIN`, and `APP_URL` in `selfhost/.env` and re-run the installer. A LAN address like `http://192.168.1.10:3210` is enough for testing on the same network; for everyday use you want TLS and a real hostname.
@@ -30,7 +30,7 @@ There is no app store listing to install from. You get your install onto a phone
   </Tab>
 
   <Tab title="Native Apps">
-    The iOS and Android Capacitor projects are already checked in under `apps/mobile/ios` and `apps/mobile/android` — there is nothing to generate. You need Xcode (for iOS) or Android Studio (for Android), plus Bun installed on your machine.
+    The iOS and Android Capacitor projects are already checked in under `apps/mobile/ios` and `apps/mobile/android`, so there is nothing to generate. You need Xcode (for iOS) or Android Studio (for Android), plus Bun installed on your machine.
 
     ## Configure your backend URLs
 
@@ -71,7 +71,7 @@ There is no app store listing to install from. You get your install onto a phone
 
     ## Keep native projects up to date
 
-    The native projects hold a copy of the built web assets — not a live link to them. Re-run the build and sync after any change to the web app:
+    The native projects hold a copy of the built web assets, not a live link to them. Re-run the build and sync after any change to the web app:
 
     ```sh
     bun run build

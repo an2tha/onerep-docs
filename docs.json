@@ -1,22 +1,41 @@
 {
   "$schema": "https://mintlify.com/docs.json",
+  "theme": "aspen",
   "name": "OneRep",
-  "theme": "almond",
-  "favicon": "https://media.brand.dev/022e6f2c-385c-42e9-9098-0e21d8c861c6.svg",
+  "description": "Documentation for OneRep — training and nutrition in one log.",
+  "favicon": "/favicon.svg",
   "colors": {
     "primary": "#171a18",
-    "light": "#f4f3ef",
-    "dark": "#949498"
+    "light": "#e8e6df",
+    "dark": "#171a18"
   },
-  "font": {
-    "headings": {
-      "family": "Instrument Sans Variable"
+  "fonts": {
+    "heading": {
+      "family": "Instrument Sans"
     },
     "body": {
-      "family": "Instrument Sans Variable"
+      "family": "Instrument Sans"
     }
   },
+  "appearance": {
+    "default": "system"
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg",
+    "href": "https://onerep.life"
+  },
   "navbar": {
+    "links": [
+      {
+        "label": "Open the app",
+        "href": "https://app.onerep.life"
+      },
+      {
+        "label": "Support",
+        "href": "mailto:hi@onerep.life"
+      }
+    ],
     "primary": {
       "type": "github",
       "href": "https://github.com/an2tha/onerep"
@@ -91,6 +110,60 @@
               "api/mcp/tools",
               "api/mcp/oauth"
             ]
+          }
+        ]
+      }
+    ]
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
+  },
+  "footer": {
+    "links": [
+      {
+        "header": "Product",
+        "items": [
+          {
+            "label": "OneRep",
+            "href": "https://onerep.life"
+          },
+          {
+            "label": "Open the app",
+            "href": "https://app.onerep.life"
+          }
+        ]
+      },
+      {
+        "header": "Docs",
+        "items": [
+          {
+            "label": "Quickstart",
+            "href": "/quickstart"
+          },
+          {
+            "label": "API & MCP",
+            "href": "/api/overview"
+          },
+          {
+            "label": "Self-hosting",
+            "href": "/selfhost/overview"
+          }
+        ]
+      },
+      {
+        "header": "Source",
+        "items": [
+          {
+            "label": "GitHub",
+            "href": "https://github.com/an2tha/onerep"
           }
         ]
       }

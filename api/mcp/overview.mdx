@@ -4,7 +4,7 @@ sidebarTitle: "MCP"
 description: "Connect any MCP-compatible AI assistant to your OneRep training and nutrition log using streamable HTTP, JSON-RPC 2.0, and your existing API keys."
 ---
 
-OneRep speaks the [Model Context Protocol](https://modelcontextprotocol.io), which lets an AI assistant read your training and nutrition log and — if you allow it — add to it. You use the same API keys, the same scopes, and the same rate limits as the REST API, so there is nothing new to provision. The endpoint is a single `POST` URL that your assistant calls to discover tools and invoke them.
+OneRep speaks the [Model Context Protocol](https://modelcontextprotocol.io), which lets an AI assistant read your training and nutrition log and, if you allow it, add to it. You use the same API keys, the same scopes, and the same rate limits as the REST API, so there is nothing new to provision. The endpoint is a single `POST` URL that your assistant calls to discover tools and invoke them.
 
 ## Endpoint and protocol
 
@@ -14,7 +14,7 @@ Your MCP endpoint is:
 POST https://<your-convex-deployment>.convex.site/mcp
 ```
 
-Find your exact URL under **Settings → API & MCP** in the app. Copy it from there — do not assemble it by hand.
+Find your exact URL under **Settings → API & MCP** in the app. Copy it from there. Do not assemble it by hand.
 
 | Property | Value |
 |---|---|
@@ -34,7 +34,7 @@ Authorization: Bearer onerep_sk_…
 You create and manage keys under **Settings → API & MCP**. Each key is either **Read only** (scope: `read`) or **Read & write** (scope: `write`). Scopes, rate limits, and key management work the same way here as they do for the REST API.
 
 <Note>
-A read-only token lists only 5 tools — the read tools. The 6 write tools are hidden from it entirely, and calling one directly is refused. If `tools/list` returns only 5 entries, you have a read-only token. Create a read & write token to unlock all 11 tools.
+A read-only token lists only the 6 read tools. The 5 write tools are hidden from it entirely, and calling one directly is refused. If `tools/list` returns only 6 entries, you have a read-only token. Create a read & write token to unlock all 11 tools.
 </Note>
 
 ## Connecting an AI assistant
@@ -76,4 +76,4 @@ curl -s https://<deployment>.convex.site/mcp \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | jq
 ```
 
-A working response lists the tools available to your token. A missing or revoked token returns a `401` with a `WWW-Authenticate` header — it does not return an empty list — so a misconfigured client will tell you immediately rather than silently appearing to be an empty account.
+A working response lists the tools available to your token. A missing or revoked token returns a `401` with a `WWW-Authenticate` header rather than an empty list, so a misconfigured client will tell you immediately rather than silently appearing to be an empty account.

@@ -1,16 +1,16 @@
 ---
 title: "Loading the Food Databases into Your OneRep Install"
 sidebarTitle: "Food Database"
-description: "Import USDA FoodData Central, Open Food Facts, and the wger exercise catalog. Each is independent — import one, two, or all three."
+description: "Import USDA FoodData Central, Open Food Facts, and the wger exercise catalog. Each is independent, so you can import one, two, or all three."
 ---
 
-The datasource container starts empty: food search returns nothing until you import at least one catalog. Each catalog is independent and builds into its own database file, so you can import them in any order and the service serves whatever is present. Imports never interrupt the running service — each one builds a new file, verifies it, then swaps it in atomically.
+The datasource container starts empty: food search returns nothing until you import at least one catalog. Each catalog is independent and builds into its own database file, so you can import them in any order and the service serves whatever is present. Imports never interrupt the running service: each one builds a new file, verifies it, then swaps it in atomically.
 
 Run all commands from the `selfhost/` directory unless otherwise noted.
 
 <Tabs>
   <Tab title="USDA FoodData Central">
-    USDA FoodData Central contains generic whole foods with lab-measured nutrition data, all in the public domain. This is the catalog that makes a search for "chicken breast" return an actual ingredient rather than a supermarket SKU. **Start here** — it is the most useful single catalog for day-to-day logging.
+    USDA FoodData Central contains generic whole foods with lab-measured nutrition data, all in the public domain. This is the catalog that makes a search for "chicken breast" return an actual ingredient rather than a supermarket SKU. **Start here.** It is the most useful single catalog for day-to-day logging.
 
     The download is approximately 3.1 GB and the import takes a few minutes.
 
@@ -45,7 +45,7 @@ Run all commands from the `selfhost/` directory unless otherwise noted.
   </Tab>
 
   <Tab title="wger Exercise Catalog">
-    The wger catalog provides the exercise database used throughout the training features. Unlike the food catalogs, there is no file to download — the importer fetches data directly from the wger API.
+    The wger catalog provides the exercise database used throughout the training features. Unlike the food catalogs, there is no file to download, because the importer fetches data directly from the wger API.
 
     <Steps>
       <Step title="Run the import">

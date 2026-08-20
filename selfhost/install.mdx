@@ -1,7 +1,7 @@
 ---
 title: "Install OneRep on Your Own Server or Local Machine"
 sidebarTitle: "Install"
-description: "Clone the repo, run one script, and every service starts automatically. Re-running is always safe — the installer is fully idempotent."
+description: "Clone the repo, run one script, and every service starts automatically. Re-running is always safe, because the installer is fully idempotent."
 ---
 
 Installation is a single script. It handles secrets, backend deployment, environment wiring, and service startup in one pass. You do not need to configure anything before running it unless you plan to serve on a real domain (covered below).
@@ -23,7 +23,7 @@ Installation is a single script. It handles secrets, backend deployment, environ
     ./install.sh
     ```
 
-    The script asks one question — whether to enable anonymous telemetry (default yes; choosing no means no analytics script is built into the app at all). After that it runs without further input.
+    The script asks one question: whether to enable anonymous telemetry (default yes; choosing no means no analytics script is built into the app at all). After that it runs without further input.
 
     **What the script does:**
 
@@ -46,7 +46,7 @@ Installation is a single script. It handles secrets, backend deployment, environ
   </Step>
 
   <Step title="Verify the install">
-    Open `http://127.0.0.1:8081` in your browser. You should see the OneRep sign-in screen. Create an account — it will have full Pro access with no paywall.
+    Open `http://127.0.0.1:8081` in your browser. You should see the OneRep sign-in screen. Create an account. It will have full Pro access with no paywall.
 
     The dashboard at `http://127.0.0.1:6791` is where you inspect data and manage backend environment variables.
   </Step>
@@ -80,4 +80,4 @@ Every knob is documented in the comments at the top of `selfhost/install.sh` and
 
 ## Re-running the installer
 
-Re-running `./install.sh` is safe at any time. The existing secrets in `selfhost/.env` are kept, and the deploy is idempotent — functions and environment variables are updated in place. Use this whenever you pull new changes or adjust configuration.
+Re-running `./install.sh` is safe at any time. The existing secrets in `selfhost/.env` are kept, and the deploy is idempotent: functions and environment variables are updated in place. Use this whenever you pull new changes or adjust configuration.

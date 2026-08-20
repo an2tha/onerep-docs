@@ -1,13 +1,13 @@
 ---
-title: "OneRep REST API — Write (POST) Endpoints Reference"
+title: "OneRep REST API: Write (POST) Endpoints Reference"
 sidebarTitle: "Write Endpoints"
 description: "All POST endpoints available to write-scoped API keys: programmatically log water intake, food entries, body weight, workout sessions, and rest days."
 ---
 
-The write endpoints let you add entries to your OneRep log from any HTTP client — a smart scale, a meal-planning script, a shortcut on your phone, or anything else that can make a POST request. Every endpoint requires a key that carries the `write` scope, and every request body must be valid JSON sent with `Content-Type: application/json`.
+The write endpoints let you add entries to your OneRep log from any HTTP client: a smart scale, a meal-planning script, a shortcut on your phone, or anything else that can make a POST request. Every endpoint requires a key that carries the `write` scope, and every request body must be valid JSON sent with `Content-Type: application/json`.
 
 <Warning>
-  **Writes are not idempotent.** There are no idempotency keys. A retried `POST /v1/food` logs the same meal twice. Only retry on `429` and `5xx` responses — never retry on `4xx`.
+  **Writes are not idempotent.** There are no idempotency keys. A retried `POST /v1/food` logs the same meal twice. Only retry on `429` and `5xx` responses. Never retry on `4xx`.
 </Warning>
 
 <Warning>
@@ -24,7 +24,7 @@ The write endpoints let you add entries to your OneRep log from any HTTP client 
 
 ---
 
-## POST /v1/water — Log a water intake entry
+## POST /v1/water: Log a water intake entry
 
 Adds a water intake entry to your log. You can optionally supply a date to back-fill a previous day; without one, the entry is assigned to today in UTC.
 
@@ -61,7 +61,7 @@ curl -s https://<deployment>.convex.site/v1/water \
 
 ---
 
-## POST /v1/food — Log a food entry
+## POST /v1/food: Log a food entry
 
 Adds a food item to your nutrition log. Only `name` and `calories` are required; the macro fields are optional but recommended for accurate daily totals. If you omit `meal`, the entry is filed under `snack`.
 
@@ -131,9 +131,9 @@ curl -s https://<deployment>.convex.site/v1/food \
 
 ---
 
-## POST /v1/weight — Log a body weight measurement
+## POST /v1/weight: Log a body weight measurement
 
-Records a body weight weigh-in. If a weigh-in already exists for the target date, this **replaces** it rather than creating a second entry — so it is safe to send an updated reading for the same day.
+Records a body weight weigh-in. If a weigh-in already exists for the target date, this **replaces** it rather than creating a second entry, so it is safe to send an updated reading for the same day.
 
 **Bounds:** `weightKg` must be between **20 and 400** kilograms.
 
@@ -168,14 +168,14 @@ curl -s https://<deployment>.convex.site/v1/weight \
 
 ---
 
-## POST /v1/workouts — Log a workout session
+## POST /v1/workouts: Log a workout session
 
 Records a complete workout session including all exercises and their sets. You may include a total duration and a specific date; without a date the session is assigned to today in UTC.
 
 **Limits:**
 - Maximum **20 exercises** per session.
 - Maximum **30 sets** per exercise.
-- Maximum **2 sessions per calendar day.** A third POST on the same date returns a `400` with an explanation — it is not silently dropped.
+- Maximum **2 sessions per calendar day.** A third POST on the same date returns a `400` with an explanation; it is not silently dropped.
 
 ### Request body
 
@@ -250,7 +250,7 @@ curl -s https://<deployment>.convex.site/v1/workouts \
 
 ---
 
-## POST /v1/rest-days — Mark dates as rest days
+## POST /v1/rest-days: Mark dates as rest days
 
 Marks one or more calendar dates as planned rest days. You can submit up to 31 dates in a single request, which makes it easy to pre-schedule a full month at once.
 

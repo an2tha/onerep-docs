@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="208" height="48" viewBox="0 0 208 48" fill="none" role="img" aria-label="OneRep">
+  <g transform="translate(1 2) scale(0.1275) translate(-85 -115)" fill="none" stroke="#171a18" stroke-width="25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M152 204 C 146 144 179 120 230 120 C 281 120 313 144 307 204"/>
+    <path d="M224 242 C 208 200 173 180 143 186 C 111 192 89 218 91 256 C 93 296 125 336 179 362 C 203 372 231 360 253 342"/>
+    <path d="M224 242 C 241 202 275 184 305 192 C 329 200 341 220 335 240"/>
+    <path d="M253 342 C 293 320 333 280 393 200"/>
+    <path d="M359 280 C 359 324 343 370 303 404 C 271 430 243 436 227 418 C 213 402 219 382 235 378"/>
+    <path d="M426 158 L 409 231 L 356 191 Z" fill="#171a18" stroke-width="11"/>
+  </g>
+  <text x="56" y="33" fill="#171a18" font-family="Instrument Sans, ui-sans-serif, system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="28" font-weight="600" letter-spacing="-0.8">OneRep</text>
+</svg>
