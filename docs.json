@@ -61,6 +61,8 @@
               "features/nutrition",
               "features/training",
               "features/progress",
+              "features/health",
+              "features/health-metrics",
               "features/coach"
             ]
           },

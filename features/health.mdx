@@ -1,0 +1,101 @@
+---
+title: "Health: Recovery Score, Dials, and Apple Health / Health Connect Sync"
+sidebarTitle: "Health"
+description: "Read your health score, choose which dials appear, open the Recovery, Sleep, Activity, Heart, and Body areas, and control which metrics OneRep is allowed to read from your phone."
+---
+
+The Health page answers one question before anything else: how you are doing right now, as a single score, with the areas behind it underneath. Everything it shows comes from Apple Health on iOS or Health Connect on Android, plus the check-ins you type yourself. Nothing is read from your phone unless you switch it on.
+
+## The score and the dials
+
+The number at the top is your health score, with a plain-language band next to it ("ready", "steady", and so on) and a line telling you how many of the past days were actually measured. A score built on two days of data says so rather than pretending.
+
+Beneath it sits a row of dials, one per area. Each dial shows that area's own score and a line of context, and tapping one opens the area screen behind it.
+
+| Dial | What it shows | Screen |
+|---|---|---|
+| Recovery | Whether today is a day to push | `/health/recovery` |
+| Sleep | Asleep time against your baseline | `/health/sleep` |
+| Activity | Exercise minutes and steps | `/health/activity` |
+| Heart | Resting rate and variability | `/health/heart` |
+| Body | Weight and composition | `/health/body` |
+
+Under the dials, a short summary explains what moved, followed by **How to move it**: two to four concrete cards ("+2,400 steps", "+35 min sleep") with the points each would add to your score. **Trends and history** at the bottom opens every signal by week, month, or year.
+
+### Choosing which dials appear
+
+Tap the sliders icon in the Health header to open **Dials** and switch areas on or off. This is purely about what you want to look at: switching off the Sleep dial does not stop sleep syncing, and its charts stay in Trends either way.
+
+Dial choice is stored on your account, so it follows you across devices. Fewer dials also means bigger ones; the ring size falls out of how many you show rather than being fixed.
+
+<Note>
+  Body has no ring. There is no honest target to grade a weight against, so the Body dial shows your latest reading instead of a score.
+</Note>
+
+## Area screens
+
+Every area screen follows the same shape: a headline stat, charts you can flip between week, month, and year, and an **About** section explaining where each number comes from and how far to trust it.
+
+Area screens hide charts with no data. If you have never recorded body fat, the body fat chart is not there, rather than sitting empty and implying you forgot something. **Trends** is the exception: it shows every series whether or not it has readings, because that page exists to tell you what the app can track.
+
+### Body
+
+The Body area at `/health/body` covers weight and composition. It plots weight and body fat over time, and reads from both sources at once: check-ins you type in Progress, and readings your scale writes to Apple Health or Health Connect.
+
+Change is measured against your first reading in the log, not yesterday's. A day-to-day difference on a bathroom scale is mostly water, and a fortnight is the shortest window that means anything. Days with no weigh-in are drawn as a break in the line, never as a drop to zero.
+
+<Tip>
+  Smart-scale body fat percentages come from electrical impedance. Treat a move from 22 to 20 as real and the 20 itself as approximate.
+</Tip>
+
+## Choosing what OneRep may read
+
+Go to **Settings → Health & wearables**. Turn on sync, grant the permission your phone asks for, and then use the switch list below to decide, metric by metric, what OneRep reads.
+
+The list is grouped into **Activity**, **Recovery**, and **Body**, and covers the ten metrics the app scores on:
+
+| Metric | Group | Unit | On by default |
+|---|---|---|---|
+| Steps | Activity | steps | Yes |
+| Active calories | Activity | kcal | Yes |
+| Sleep | Recovery | min | Yes |
+| Resting heart rate | Recovery | bpm | Yes |
+| Heart rate variability | Recovery | ms | Yes |
+| Weight | Body | kg | Yes |
+| Body fat | Body | % | Yes |
+| Lean body mass | Body | kg | No |
+| Bone mass | Body | kg | No |
+| Basal metabolic rate | Body | kcal | No |
+
+A metric you switch off is never read from the phone in the first place. This is a sharing control, not a display filter: the app does not fetch the readings, so there is nothing to delete afterwards.
+
+Switches are stored per metric on your account. A metric added in a later release arrives switched on if its catalogue default says so, and one you explicitly switched off stays off through every update.
+
+<Note>
+  Bone mass is Android only. Apple Health has no bone mass type at all, so the switch has nothing to read on an iPhone however you set it.
+</Note>
+
+<Note>
+  The switches are inert until sync itself is on. Each row says **Turn on Apple Health sync first** (or Health Connect, on Android) rather than moving and doing nothing.
+</Note>
+
+For the full catalogue of what each platform exposes, including the metrics you can bind a custom metric to, see [Health metrics by platform](/features/health-metrics).
+
+## Body composition sync
+
+With the Body metrics switched on, weight, body fat, lean mass, bone mass, and basal metabolic rate are read from HealthKit or Health Connect and filed as **check-ins**, in the same place a typed weigh-in lands. Your scale readings show up in Progress and in the Body area without a second data set to reconcile.
+
+Two rules keep this from eating your own numbers:
+
+<CardGroup cols={2}>
+  <Card title="Typed beats synced" icon="hand">
+    A check-in the sync did not create is never overwritten. If you typed a weight for Tuesday, no later scale reading replaces it. Editing a synced row makes it yours, and the sync stops treating it as its own from then on.
+  </Card>
+  <Card title="Only what the reading carries" icon="filter">
+    Only fields a reading actually contains are written. A scale that reports weight but not body fat cannot blank a body fat percentage you recorded by hand on the same day.
+  </Card>
+</CardGroup>
+
+Readings outside a plausible range for their metric are dropped individually. One badly behaved app writing a 900 kg weigh-in loses that field, not the day.
+
+Every check-in records whether it was typed or synced, and that source is returned by the API and MCP tools alongside the values.

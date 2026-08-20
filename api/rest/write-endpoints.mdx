@@ -15,7 +15,7 @@ The write endpoints let you add entries to your OneRep log from any HTTP client:
 </Warning>
 
 <Note>
-  **Nothing deletes.** There are no `DELETE` routes and no bulk-clear operations. Open the app to correct or remove an entry you did not mean to log.
+  **Deleting needs a separate scope.** The `DELETE` routes require a **Full access** key, and they remove one row at a time by id. There are no bulk-clear operations. Every delete is undoable from the app.
 </Note>
 
 <Note>
@@ -165,6 +165,98 @@ curl -s https://<deployment>.convex.site/v1/weight \
   "weightKg": 84.5
 }
 ```
+
+---
+
+## POST /v1/body-measurements: Write or correct a check-in
+
+Writes any part of a day's check-in, and corrects one that already exists. This is the endpoint to use when a scale reports more than a weight, or when you need to fix a single field on a day that already has an entry. `POST /v1/weight` remains the shortest path for a plain weigh-in.
+
+**Partial by design:** only the fields you send change. Everything else on that date is left exactly as it was, including measurements, notes, and the progress photo. To blank a value, name it in `clearFields`; omitting a field never deletes it.
+
+### Request body
+
+<ParamField body="date" type="string">
+  Calendar date of the check-in, in `YYYY-MM-DD` format. Defaults to today in UTC.
+</ParamField>
+
+<ParamField body="weightKg" type="number">
+  Body weight in kilograms. Between 20 and 500.
+</ParamField>
+
+<ParamField body="bodyFatPct" type="number">
+  Body fat percentage. Between 1 and 75.
+</ParamField>
+
+<ParamField body="waistCm" type="number">
+  Waist circumference in centimetres. Between 1 and 300.
+</ParamField>
+
+<ParamField body="hipsCm" type="number">
+  Hip circumference in centimetres. Between 1 and 300.
+</ParamField>
+
+<ParamField body="chestCm" type="number">
+  Chest circumference in centimetres. Between 1 and 300.
+</ParamField>
+
+<ParamField body="armsCm" type="number">
+  Arm circumference in centimetres. Between 1 and 300.
+</ParamField>
+
+<ParamField body="thighsCm" type="number">
+  Thigh circumference in centimetres. Between 1 and 300.
+</ParamField>
+
+<ParamField body="calvesCm" type="number">
+  Calf circumference in centimetres. Between 1 and 300.
+</ParamField>
+
+<ParamField body="neckCm" type="number">
+  Neck circumference in centimetres. Between 1 and 300.
+</ParamField>
+
+<ParamField body="leanBodyMassKg" type="number">
+  Lean body mass in kilograms. Between 10 and 300.
+</ParamField>
+
+<ParamField body="boneMassKg" type="number">
+  Bone mass in kilograms. Between 0.5 and 20.
+</ParamField>
+
+<ParamField body="basalMetabolicRateKcal" type="number">
+  Basal metabolic rate in kcal per day. Between 500 and 6000.
+</ParamField>
+
+<ParamField body="notes" type="string">
+  Free-text note attached to the check-in. Up to 2,000 characters.
+</ParamField>
+
+<ParamField body="clearFields" type="string[]">
+  Names of fields to blank on this check-in, for values you cannot express as a number.
+</ParamField>
+
+**Example request**
+
+```bash
+curl -s https://<deployment>.convex.site/v1/body-measurements \
+  -H "Authorization: Bearer onerep_sk_…" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "date": "2026-04-15",
+    "weightKg": 84.2,
+    "bodyFatPct": 18.4,
+    "leanBodyMassKg": 68.7
+  }' | jq
+```
+
+<Warning>
+  A request with no measurement fields at all is refused rather than treated as an empty write. Send at least one field, or at least one entry in `clearFields`.
+</Warning>
+
+<Note>
+  Correcting a check-in that came from Apple Health or Health Connect marks it as manual. A later phone sync then leaves that day alone rather than writing over your correction.
+</Note>
 
 ---
 

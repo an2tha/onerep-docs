@@ -1,0 +1,137 @@
+---
+title: "Health Metrics by Platform: Apple Health and Health Connect Mapping"
+sidebarTitle: "Health Metrics"
+description: "Every health signal OneRep can read, how Apple Health and Health Connect name it, its unit, how a day's readings are aggregated, and where one platform has no equivalent."
+---
+
+Apple Health and Health Connect disagree more than their marketing suggests. This page lists all 43 signals OneRep understands, what each store calls it, and what happens on the platform that does not have it.
+
+Metrics marked with an asterisk are the ones OneRep scores on and draws its own screens for. Everything else can be bound to a [custom progress metric](/features/progress): a custom metric carries an optional health metric key, and the sync fills that metric in from your phone. This is how blood glucose or blood pressure gets tracked without the app pretending to have an opinion about what a good reading is.
+
+## How to read these tables
+
+- **Apple Health** names the HealthKit identifier, without the `HKQuantityTypeIdentifier` prefix.
+- **Health Connect** names the record class, without the `Record` suffix.
+- **Aggregation** is how a day's readings collapse into one number. `Sum` for things that accumulate, `Average` for sampled signals where no single reading is more true than another, `Latest` for point measurements you take, `Sessions` for things with a start and an end.
+- **Plausible range** is a filter, not a target. A reading outside it is dropped on its own; the rest of the day survives. A health store aggregates every app on your phone, and one badly behaved writer must not be able to poison a baseline.
+
+A dash means that platform has no equivalent type. Where that happens, the note under the table says what to do instead, since "your phone cannot do this" is a better answer than a number that never arrives.
+
+## The catalogue
+
+### Activity
+
+| Metric | Apple Health | Health Connect | Unit | Aggregation | Plausible range |
+|---|---|---|---|---|---|
+| Steps * | `stepCount` | `Steps` | steps | Sum | 0–200000 |
+| Active calories * | `activeEnergyBurned` | `ActiveCaloriesBurned` | kcal | Sum | 0–20000 |
+| Total calories | — | `TotalCaloriesBurned` | kcal | Sum | 0–30000 |
+| Exercise minutes * | `appleExerciseTime` | `ExerciseSession` | min | Sessions | 0–1440 |
+| Walking and running distance | `distanceWalkingRunning` | `Distance` | m | Sum | 0–500000 |
+| Cycling distance | `distanceCycling` | — | m | Sum | 0–1000000 |
+| Swimming distance | `distanceSwimming` | — | m | Sum | 0–100000 |
+| Floors climbed | `flightsClimbed` | `FloorsClimbed` | floors | Sum | 0–1000 |
+| Elevation gained | — | `ElevationGained` | m | Sum | 0–20000 |
+| Wheelchair pushes | `pushCount` | `WheelchairPushes` | pushes | Sum | 0–100000 |
+| VO2 max | `vo2Max` | `Vo2Max` | mL/kg/min | Latest | 5–100 |
+| Cycling cadence | `cyclingCadence` | `CyclingPedalingCadence` | rpm | Average | 1–250 |
+| Power | `cyclingPower` | `Power` | W | Average | 1–2500 |
+| Speed | `runningSpeed` | `Speed` | m/s | Average | 0–50 |
+
+
+<Note>
+  - **Total calories**: Apple Health reports active and resting energy separately rather than as one total.
+  - **Walking and running distance**: Health Connect keeps one distance figure across every activity; on Android this includes cycling and swimming.
+  - **Cycling distance**: Health Connect does not split distance by activity.
+  - **Swimming distance**: Health Connect does not split distance by activity.
+  - **Elevation gained**: Apple Health exposes flights climbed rather than metres ascended.
+</Note>
+
+### Vitals
+
+| Metric | Apple Health | Health Connect | Unit | Aggregation | Plausible range |
+|---|---|---|---|---|---|
+| Resting heart rate * | `restingHeartRate` | `RestingHeartRate` | bpm | Average | 20–200 |
+| Heart rate | `heartRate` | `HeartRate` | bpm | Average | 20–250 |
+| Heart rate variability * | `heartRateVariabilitySDNN` | `HeartRateVariabilityRmssd` | ms | Average | 1–500 |
+| Blood glucose | `bloodGlucose` | `BloodGlucose` | mmol/L | Average | 1–40 |
+| Blood pressure (systolic) | `bloodPressureSystolic` | `BloodPressure` | mmHg | Average | 50–260 |
+| Blood pressure (diastolic) | `bloodPressureDiastolic` | `BloodPressure` | mmHg | Average | 30–200 |
+| Blood oxygen | `oxygenSaturation` | `OxygenSaturation` | % | Average | 50–100 |
+| Respiratory rate | `respiratoryRate` | `RespiratoryRate` | breaths/min | Average | 3–80 |
+| Body temperature | `bodyTemperature` | `BodyTemperature` | °C | Latest | 25–45 |
+| Basal body temperature | `basalBodyTemperature` | `BasalBodyTemperature` | °C | Latest | 25–45 |
+
+### Body
+
+| Metric | Apple Health | Health Connect | Unit | Aggregation | Plausible range |
+|---|---|---|---|---|---|
+| Weight * | `bodyMass` | `Weight` | kg | Latest | 20–500 |
+| Body fat * | `bodyFatPercentage` | `BodyFat` | % | Latest | 1–75 |
+| Lean body mass * | `leanBodyMass` | `LeanBodyMass` | kg | Latest | 10–300 |
+| Bone mass * | — | `BoneMass` | kg | Latest | 0.5–20 |
+| Basal metabolic rate * | `basalEnergyBurned` | `BasalMetabolicRate` | kcal | Sum | 500–6000 |
+| Height | `height` | `Height` | cm | Latest | 50–260 |
+| Waist | `waistCircumference` | — | cm | Latest | 30–250 |
+
+
+<Note>
+  - **Bone mass**: Apple Health has no bone mass type; enter it as a custom metric on iOS.
+  - **Basal metabolic rate**: Apple reports resting energy accumulated over the day; Health Connect reports a rate. Both land here as kcal per day.
+  - **Waist**: Health Connect has no waist type; log it as a check-in measurement on Android.
+</Note>
+
+### Nutrition
+
+| Metric | Apple Health | Health Connect | Unit | Aggregation | Plausible range |
+|---|---|---|---|---|---|
+| Calories eaten | `dietaryEnergyConsumed` | `Nutrition` | kcal | Sum | 0–20000 |
+| Protein eaten | `dietaryProtein` | `Nutrition` | g | Sum | 0–1000 |
+| Carbohydrates eaten | `dietaryCarbohydrates` | `Nutrition` | g | Sum | 0–2000 |
+| Fat eaten | `dietaryFatTotal` | `Nutrition` | g | Sum | 0–1000 |
+| Water | `dietaryWater` | `Hydration` | ml | Sum | 0–20000 |
+| Caffeine | `dietaryCaffeine` | `Nutrition` | mg | Sum | 0–3000 |
+
+### Sleep
+
+| Metric | Apple Health | Health Connect | Unit | Aggregation | Plausible range |
+|---|---|---|---|---|---|
+| Sleep * | `sleepAnalysis` | `SleepSession` | min | Sessions | 0–1440 |
+
+### Reproductive health
+
+| Metric | Apple Health | Health Connect | Unit | Aggregation | Plausible range |
+|---|---|---|---|---|---|
+| Menstrual flow | `menstrualFlow` | `MenstruationFlow` | level | Latest | 0–3 |
+| Cervical mucus | `cervicalMucusQuality` | `CervicalMucus` | level | Latest | 0–5 |
+| Ovulation test | `ovulationTestResult` | `OvulationTest` | level | Latest | 0–4 |
+| Intermenstrual bleeding | `intermenstrualBleeding` | `IntermenstrualBleeding` | recorded | Latest | 0–1 |
+
+### Mindfulness
+
+| Metric | Apple Health | Health Connect | Unit | Aggregation | Plausible range |
+|---|---|---|---|---|---|
+| Mindful minutes | `mindfulSession` | — | min | Sessions | 0–1440 |
+
+
+<Note>
+  - **Mindful minutes**: Health Connect has no mindfulness type.
+</Note>
+
+## Caveats worth keeping
+
+<Warning>
+  **Heart rate variability is not the same number on both platforms.** Apple reports SDNN; Health Connect reports RMSSD. Same concept, different maths. Compare your HRV against your own history and never against a figure from someone on the other platform, or against a published "normal" range that does not say which of the two it means.
+</Warning>
+
+**Distance.** Apple splits distance by activity, so walking and running, cycling, and swimming are three separate types. Health Connect keeps one figure across everything. On Android, the walking and running distance you see therefore includes any cycling and swimming your phone recorded.
+
+**Basal metabolic rate.** Apple reports resting energy accumulated over the day; Health Connect reports a rate. Both arrive here as kcal per day, which is close enough to compare with your own targets and not close enough to compare with a stranger's.
+
+**Blood pressure.** Health Connect keeps both numbers in one `BloodPressure` record, so systolic and diastolic map to the same record class and are pulled apart on the way in.
+
+**Nutrition.** Health Connect files calories, protein, carbohydrates, and caffeine under a single `Nutrition` record. Reading these is useful when another app owns your food logging; if you log food in OneRep, you already have better numbers.
+
+## Turning them on
+
+Nothing here is read until you turn on sync, and the ten first-class metrics each have their own switch in **Settings → Health & wearables**. See [Health](/features/health) for the switch list and what a metric being off actually means. The rest arrive only when a custom metric is bound to them.

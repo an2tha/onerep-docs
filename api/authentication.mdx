@@ -30,7 +30,7 @@ https://<your-convex-deployment>.convex.site/mcp
     Give the key a name that describes where it will live, for example `home-dashboard`, `claude-assistant`, or `tuesday-lunch-script`. A descriptive name makes it obvious which key to revoke if something goes wrong.
   </Step>
   <Step title="Choose a scope">
-    Select **Read only** or **Read & write** depending on what your integration needs to do. Read only is the safer default, since most integrations only ever read. You cannot change the scope after the key is created, so pick carefully.
+    Select **Read only**, **Read & write**, or **Full access** depending on what your integration needs to do. The scopes are a ladder rather than a set of switches: write includes read, and full access includes both. Read only is the safer default, since most integrations only ever read. You cannot change the scope after the key is created, so pick carefully.
   </Step>
   <Step title="Copy the key immediately">
     After the key is created it is displayed exactly once. Copy it now and store it somewhere secure, such as a password manager or an environment variable in your deployment. OneRep stores only a hash of the key and cannot show it to you again.
@@ -75,8 +75,9 @@ Every key carries a scope that determines which routes it can call.
 
 | Scope | What it allows |
 |-------|----------------|
-| **Read only** | All `GET` routes: days, workouts, measurements, goals, insights |
-| **Read & write** | All `GET` routes **plus** all `POST` routes: logging food, water, weight, workouts, and rest days |
+| **Read only** | All `GET` routes: days, workouts, measurements, health readings, goals, insights |
+| **Read & write** | All `GET` routes **plus** all `POST` routes: logging food, water, weight, check-ins, workouts, and rest days |
+| **Full access** | Everything above **plus** the `DELETE` routes: removing entries, sessions, check-ins, and days of health readings |
 
 Read-only enforcement is strict: a `POST` route called with a read-only key returns `403 insufficient_scope` immediately, before any work happens. There is no way to persuade a read-only key to write.
 

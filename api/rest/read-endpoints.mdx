@@ -38,7 +38,9 @@ curl -s https://<deployment>.convex.site/v1 \
   { "method": "GET",  "path": "/v1/days/{date}" },
   { "method": "GET",  "path": "/v1/days" },
   { "method": "GET",  "path": "/v1/workouts" },
-  { "method": "GET",  "path": "/v1/measurements" }
+  { "method": "GET",  "path": "/v1/measurements" },
+  { "method": "GET",  "path": "/v1/health/days" },
+  { "method": "GET",  "path": "/v1/health/workouts" }
 ]
 ```
 
@@ -418,20 +420,64 @@ curl -s "https://<deployment>.convex.site/v1/measurements?limit=10" \
 ```json
 [
   {
+    "id": "kx7…",
     "date": "2026-04-15",
-    "weightKg": 84.5
-  },
-  {
-    "date": "2026-04-14",
-    "weightKg": 84.7
+    "source": "health",
+    "weightKg": 84.5,
+    "bodyFatPct": 18.4,
+    "waistCm": null,
+    "hipsCm": null,
+    "chestCm": null,
+    "armsCm": null,
+    "thighsCm": null,
+    "calvesCm": null,
+    "neckCm": null,
+    "leanBodyMassKg": 68.7,
+    "boneMassKg": null,
+    "basalMetabolicRateKcal": 1780,
+    "notes": null
   }
 ]
 ```
+
+Every field a check-in can hold is returned, not just the ones the charts plot. A field with no value comes back as `null` rather than being omitted, so a client can tell the difference between "nothing recorded" and "not supported".
+
+<ResponseField name="id" type="string">
+  Identifier for this check-in. Pass it to `DELETE /v1/measurements/{id}` to remove the row.
+</ResponseField>
 
 <ResponseField name="date" type="string">
   The date the measurement was recorded, in `YYYY-MM-DD` format.
 </ResponseField>
 
+<ResponseField name="source" type="string">
+  Where the row came from. `"manual"` for a check-in typed in the app or written through the API, `"health"` for one read from Apple Health or Health Connect.
+</ResponseField>
+
 <ResponseField name="weightKg" type="number">
   Body weight recorded on this date in kilograms.
+</ResponseField>
+
+<ResponseField name="bodyFatPct" type="number">
+  Body fat percentage recorded on this date.
+</ResponseField>
+
+<ResponseField name="leanBodyMassKg" type="number">
+  Lean body mass in kilograms, typically from a smart scale.
+</ResponseField>
+
+<ResponseField name="boneMassKg" type="number">
+  Bone mass in kilograms. Android only; Apple Health has no bone mass type.
+</ResponseField>
+
+<ResponseField name="basalMetabolicRateKcal" type="number">
+  Basal metabolic rate in kcal per day.
+</ResponseField>
+
+<ResponseField name="waistCm, hipsCm, chestCm, armsCm, thighsCm, calvesCm, neckCm" type="number">
+  Circumference measurements in centimetres.
+</ResponseField>
+
+<ResponseField name="notes" type="string">
+  The journal note attached to this check-in, if any.
 </ResponseField>
